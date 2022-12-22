@@ -1,0 +1,7 @@
+/.vagrant
+/.env-overlay
+/.tmp-no-git-working
+/packages/all-js/node_modules
+/packages/all-js/package-lock.json
+
+/.vscode

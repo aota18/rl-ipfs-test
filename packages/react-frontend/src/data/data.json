@@ -1,0 +1,16 @@
+{
+  "contracts": {
+    "greetingCard": {
+      "mainnet": "0x1B9d5a626fEf3183cDDb456e5DA8F34A7C428145",
+      "goerli": "0x16db941B5C258F5D28fe93E058bcc64F6028b1e4"
+    },
+    "sbt": {
+      "mainnet": "",
+      "goerli": "0x5D99889e800BD18De7377e614fbB2362D9cECA2F"
+    }
+  },
+  "explorer": {
+    "mainnet": "https://etherscan.io",
+    "goerli": "https://goerli.etherscan.io"
+  }
+}

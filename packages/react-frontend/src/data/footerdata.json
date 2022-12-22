@@ -1,0 +1,100 @@
+{
+  "footerlogo": "img/logo-redletter.svg",
+  "footertext": "Our support team will get assistance from AI-powered, making it quicker than ever to handle support requests.",
+  "footerbg": "assets/img/bg/footer.png",
+  "socialurl": {
+    "twitter": "https://twitter.com/redlettereth"
+  },
+  "socialicon": [
+    {
+      "icon": "fa fa-dribbble",
+      "url": "https://www.facebook.com/codingeek.net/"
+    },
+    {
+      "icon": "fa fa-facebook",
+      "url": "https://www.facebook.com/codingeek.net/"
+    },
+    {
+      "icon": "fa fa-twitter",
+      "url": "https://twitter.com/codingeeknet"
+    },
+    {
+      "icon": "fa fa-linkedin",
+      "url": "https://www.linkedin.com/company/codingeek/about/"
+    },
+    {
+      "icon": "fa fa-instagram",
+      "url": "https://www.instagram.com/codingeeknet/"
+    }
+  ],
+  "copyrighttext": " © Redletter 2022 All rights reserved.",
+  "contactwidget": {
+    "title": "Contact",
+    "address": "abcd, abcd, abcd, USA",
+    "contact": "+088 012121240",
+    "email": "support@redletter.eth"
+  },
+  "quicklink": {
+    "title": "Quick Link",
+    "links": [
+      {
+        "title": "Home",
+        "url": ""
+      },
+      {
+        "title": "About Us",
+        "url": "/about"
+      },
+      {
+        "title": "Services",
+        "url": "services"
+      },
+      {
+        "title": "Contact",
+        "url": "contact"
+      }
+    ]
+  },
+  "needhelp": {
+    "title": "Need Help?",
+    "links": [
+      {
+        "title": "FAQS",
+        "url": "#"
+      },
+      {
+        "title": "Privacy",
+        "url": "#"
+      },
+      {
+        "title": "Policy",
+        "url": "#"
+      },
+      {
+        "title": "Support",
+        "url": "#"
+      },
+      {
+        "title": "Documentation",
+        "url": "#"
+      }
+    ]
+  },
+  "latestnews": {
+    "title": "Latest News",
+    "items": [
+      {
+        "title": "New Feature Added",
+        "image_url": "assets/img/blog/widget1.png",
+        "url": "/blog-details",
+        "date": "21 August 2019"
+      },
+      {
+        "title": "Business Development",
+        "image_url": "assets/img/blog/widget2.png",
+        "url": "/blog-details",
+        "date": "21 August 2019"
+      }
+    ]
+  }
+}

@@ -8,7 +8,7 @@ panic () {
 
 REPO_DIR=$(pwd)
 
-CHECK_FILE_NAME="${REPO_DIR}/cli-dev/start.sh"
+CHECK_FILE_NAME="${REPO_DIR}/cli/start.sh"
 
 [ -f $CHECK_FILE_NAME ] || panic "invalid start point. no file exist at (${CHECK_FILE_NAME})"
 
@@ -21,66 +21,18 @@ set +e
 
 
 [ -z "${CURRENT_DEV_HOST_IP}" ] && panic "env check"
-[ -z "${ASSET_NO_CACHE}" ] && panic "missing env"
 
 [ -z "${NET_SUBNET}" ] && panic "missing env"
 [ -z "${NET_IP_NGINX}" ] && panic "missing env"
-[ -z "${NET_IP_PHP}" ] && panic "missing env"
-[ -z "${NET_IP_MYSQL}" ] && panic "missing env"
 
 [ -z "${NET_PORT_NGINX}" ] && panic "missing env"
-[ -z "${NET_PORT_MYSQL_SERVER}" ] && panic "missing env"
-
-
-# for PHP Laravel
-[ -z "${APP_NAME}" ] && panic "missing env"
-[ -z "${APP_ENV}" ] && panic "missing env"
-
-[ -z "${APP_KEY}" ] && panic "missing env"
-[ -z "${APP_PATH_STORAGE}" ] && panic "missing env"
-[ -z "${APP_PATH_BOOTSTRAP}" ] && panic "missing env"
-
-# for mysql
-[ -z "${DB_CONNECTION}" ] && panic "missing env"
-[ -z "${DB_MYSQL_HOST}" ] && panic "missing env"
-[ -z "${DB_MYSQL_PORT}" ] && panic "missing env"
-[ -z "${DB_MYSQL_SCHEMA}" ] && panic "missing env"
-[ -z "${DB_MYSQL_USER}" ] && panic "missing env"
-[ -z "${DB_MYSQL_PASS}" ] && panic "missing env"
-
-# session
-[ -z "${SESSION_CONNECTION}" ] && panic "missing env"
-[ -z "${SESSION_DRIVER}" ] && panic "missing env"
-[ -z "${SESSION_LIFETIME}" ] && panic "missing env"
-[ -z "${SESSION_COOKIE}" ] && panic "missing env"
-[ -z "${SESSION_DOMAIN}" ] && panic "missing env"
-
 
 export CURRENT_DEV_HOST_IP="${CURRENT_DEV_HOST_IP}"
 
 TMP_DIR_ROOT="${REPO_DIR}/.tmp-no-git-working"
 declare -a CACHE_FOLDERS=( \
 	'docker' \
-	'docker/php-tmp' \
-	'docker/php-tmp/bootstrap' \
-  'docker/php-tmp/bootstrap/cache' \
-  'docker/php-tmp/public' \
-  'docker/php-tmp/public/temp' \
-  'docker/php-tmp/public/upload' \
-  'docker/php-tmp/storage' \
-  'docker/php-tmp/storage/app' \
-  'docker/php-tmp/storage/app/public' \
-  'docker/php-tmp/storage/framework' \
-  'docker/php-tmp/storage/framework/cache' \
-  'docker/php-tmp/storage/framework/cache/data' \
-  'docker/php-tmp/storage/framework/sessions' \
-  'docker/php-tmp/storage/framework/testing' \
-  'docker/php-tmp/storage/framework/views' \
-	'docker/js-daemon' \
-	'docker/js-daemon/tmp-upload' \
 	'docker/upload' \
-	'daemon-tmp' \
-	'daemon-tmp/tmp-upload'
 )
 
 

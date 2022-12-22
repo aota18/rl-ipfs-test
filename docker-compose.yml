@@ -2,7 +2,7 @@
 #     http://geekyplatypus.com/dockerise-your-php-application-with-nginx-and-php7-fpm/
 #
 
-version: "3"
+version: '3'
 
 networks:
   rt_net:
@@ -31,3 +31,16 @@ services:
     entrypoint: /config-root/entrypoint.sh
     environment:
       HOST_IP: $CURRENT_DEV_HOST_IP
+
+  postgresDB:
+    image: postgres:latest
+    networks:
+      default:
+      rt_net:
+        ipv4_address: $NET_IP_DB_POSTGRES
+    ports:
+      - $POSTGRES_DB_PORT:5432
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: redletter
