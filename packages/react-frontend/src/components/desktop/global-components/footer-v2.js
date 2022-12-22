@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import footerdata from "../../../data/footerdata.json";
-import { AiFillTwitterCircle } from "react-icons/ai";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import footerdata from '../../../data/footerdata.json';
+import { AiFillTwitterCircle } from 'react-icons/ai';
 
 class Footer_V2 extends Component {
   componentDidMount() {
-    let publicUrl = process.env.PUBLIC_URL + "/";
+    let publicUrl = process.env.PUBLIC_URL + '/';
 
-    const minscript = document.createElement("script");
+    const minscript = document.createElement('script');
     minscript.async = true;
-    minscript.src = publicUrl + "assets/js/main.js";
+    minscript.src = publicUrl + 'assets/js/main.js';
 
     document.body.appendChild(minscript);
   }
 
   render() {
-    let publicUrl = process.env.PUBLIC_URL + "/";
-    let imgAlt = "footer logo";
+    let publicUrl = process.env.PUBLIC_URL + '/';
+    let imgAlt = 'footer logo';
 
     return (
       <div>
@@ -29,7 +29,7 @@ class Footer_V2 extends Component {
                     <div className="about_us_widget space-y-8">
                       <a href="/" className="footer-logo">
                         <img
-                          style={{ width: "2rem" }}
+                          style={{ width: '2rem' }}
                           src={publicUrl + footerdata.footerlogo}
                           alt={imgAlt}
                         />
@@ -84,6 +84,7 @@ class Footer_V2 extends Component {
               className="copyright-text text-gray-500"
               dangerouslySetInnerHTML={{ __html: footerdata.copyrighttext }}
             ></div>
+            <div>Version: ##version##</div>
           </div>
         </footer>
         <div className="back-to-top">

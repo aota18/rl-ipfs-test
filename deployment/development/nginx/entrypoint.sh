@@ -11,7 +11,7 @@ mkdir -p /var/log/nginx
 
 printf "\n\tSubstituting environment variables into nginx config...\n\n"
 envsubst \
-	'${HOST_IP};' \
+	'${HOST_IP},${NODE_BACKEND_PORT};' \
 	< /config-root/site.conf.template \
 	> /etc/nginx/nginx.conf
 

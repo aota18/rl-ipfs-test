@@ -1,27 +1,21 @@
-import axios from "axios";
-import Cookies from "js-cookie";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const instance = axios.create({
-  baseURL: `${
-    process.env.NODE_ENV === "production"
-      ? process.env.REACT_APP_API_BASE_URL_DEV
-      : process.env.REACT_APP_API_BASE_URL_LOCAL
-  }`,
+  baseURL: '/rest/api',
   timeout: 500000,
   headers: {
-    Accept: "*/*",
-    "Content-Type": "application/json; charset=utf-8",
+    Accept: '*/*',
+    'Content-Type': 'application/json; charset=utf-8',
   },
 });
-
-console.log(process.env.REACT_APP_API_BASE_URL_LOCAL);
 
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
   // Do something before request is sent
   let user;
-  if (Cookies.get("user")) {
-    user = JSON.parse(Cookies.get("user"));
+  if (Cookies.get('user')) {
+    user = JSON.parse(Cookies.get('user'));
   }
 
   return {

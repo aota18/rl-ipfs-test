@@ -1,0 +1,9 @@
+Package: wetribeWeb
+Version: ##version##
+Section: base
+Priority: optional
+Architecture: amd64
+Maintainer: WeTribe, LLC. <support@wetribe.io>
+Description: WeTribe LLC
+Conflicts: wt-platform
+Replaces: wt-platform
