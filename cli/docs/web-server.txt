@@ -1,0 +1,42 @@
+
+# Describe how to install webserver in EC2 Instance
+
+EC2 Instance OS Type: Ubuntu Server 20.04 LTS
+User Name: ubuntu
+
+Login by ssh -i [PEM file] ubuntu@IP
+
+#refer: https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-20-04
+[Nginx Install]
+sudo apt update
+sudo apt install nginx
+
+
+[install nodejs 14.15.5 & pm2@]
+#refer: https://computingforgeeks.com/how-to-install-nodejs-on-ubuntu-debian-linux-mint/
+sudo apt update
+sudo apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates
+curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt-get install nodejs
+sudo npm install -g pm2@5.1.0
+sudo npm install -g rimraf
+
+#deb file install should be installed
+[Send deb file to server]
+scp -i ~/.ssh/redletter-key.pem /Users/sangwonseo/Dev/red-letter/redletter-mono/.tmp-no-git-working/build/tmp/dist-backend/redletter-final.deb ubuntu@54.149.255.174:/home/ubuntu/app-dir
+
+[restart nginx]
+sudo systemctl restart nginx
+
+
+
+
+
+[redirect config]
+cd /etc/nginx
+rm -rf nginx.conf
+rm -rf mime.types
+ln -s /opt/redletter/nginx/nginx.conf ./nginx.conf
+ln -s /opt/redletter/nginx/mime.types ./mime.types
+
+

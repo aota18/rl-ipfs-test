@@ -6,35 +6,18 @@ set -e
 
 # change ownership
 echo "Change directory ownership"
-sudo chown -R ubuntu:ubuntu /opt/wetribe/
+sudo chown -R ubuntu:ubuntu /opt/redletter/
 
 
 # make writeable for php
-DIR_WRITE_ROOT=/etc/wetribe/data
+DIR_WRITE_ROOT=/etc/redletter/data
 mkdir -p "${DIR_WRITE_ROOT}"
 
 declare -a CACHE_FOLDERS=( \
-    'bootstrap' \
-    'bootstrap/cache' \
     'public' \
     'public/temp' \
-    'storage' \
-    'storage/app' \
-    'storage/app/public' \
-    'storage/framework' \
-    'storage/framework/cache' \
-    'storage/framework/cache/data' \
-    'storage/framework/sessions' \
-    'storage/framework/testing' \
-    'storage/framework/views' \
-    'storage/js-daemon/' \
-    'storage/js-daemon/tmp-upload' \
     'upload' \
 )
-
-# cleanup cache because old code may effect to with old code
-rm -rf "${DIR_WRITE_ROOT}/bootstrap"
-rm -rf "${DIR_WRITE_ROOT}/storage"
 
 for folder in ${CACHE_FOLDERS[@]}; do
     tmp_folder="${DIR_WRITE_ROOT}/${folder}"
@@ -49,12 +32,10 @@ done
 sudo chmod -R 777 "${DIR_WRITE_ROOT}"
 sudo chown -R www-data:www-data "${DIR_WRITE_ROOT}"
 
-
-sudo pm2 restart /opt/wetribe/source/js-app/app.prod.config.js
+# First time only
+# sudo pm2 start /opt/redletter/source/backend-bundle/app.prod.config.js 
+sudo pm2 restart /opt/redletter/source/backend-bundle/app.prod.config.js
 sudo systemctl restart nginx
-sudo systemctl restart php7.4-fpm
-
-
 
 echo "*************************************"
 echo "**** DONE. Please do xxxxx ****"

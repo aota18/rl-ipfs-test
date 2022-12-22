@@ -49,104 +49,60 @@ else
   TEMP_DIRS+=( "${DEST_DIR}" )
 fi
 
-
-
-
-DIST_BUILD_SRC="${DEST_DIR}/wetribe-web-server"
+DIST_BUILD_SRC="${DEST_DIR}/redletter-final"
 mkdir -p $DIST_BUILD_SRC || panic "mkdir"
 
 printf "\n [-] rsync production template \n\n"
-rsync -a "${CURRENT_DIR}/deployment/production/wt-backend/" "${DIST_BUILD_SRC}/" \
+rsync -a "${CURRENT_DIR}/deployment/production/redletter/" "${DIST_BUILD_SRC}/" \
  		--exclude ".gitignore"
 
 
-
-
-
-
-DIST_SOURCE_CODE_DIR="${DIST_BUILD_SRC}/opt/wetribe/source"
+DIST_SOURCE_CODE_DIR="${DIST_BUILD_SRC}/opt/redletter/source"
 mkdir -p $DIST_SOURCE_CODE_DIR || panic "mkdir"
 
-printf "\n [-] rsync php source \n\n"
-rsync -a "${CURRENT_DIR}/packages/server-php/" "${DIST_SOURCE_CODE_DIR}/server-php/" \
-      --exclude "package-lock.json" \
-      --exclude "node_modules" \
-      --exclude "shared-daemon" \
-      --exclude ".gitignore" \
-      --exclude "public/dist" \
 
-
-
-
-
-DIR_JSP_APP="${CURRENT_DIR}/packages/js-app"
-cd  $DIR_JSP_APP || panic "cd"
-printf "\n [-] build ui framework \n\n"
-export BUILD_APP_PATH="ui-framework"
+DIR_REACT_APP="${CURRENT_DIR}/packages/react-frontend"
+cd $DIR_REACT_APP || panic "cd"
+printf "\n [-] build ui app \n\n"
 if [ "$(uname)" = "Darwin" ]; then
-	yarn install
+	npm install
+  npm run build
+  echo "ui build done"
 else
+  panic "todo in linux"
 	npm install
 fi
-npm run ui-build
-PHP_PUBLIC_DIST_DIR="${DIST_SOURCE_CODE_DIR}/server-php/public/dist"
-if [ -d "$PHP_PUBLIC_DIST_DIR" ]; then
-	rm -rf $PHP_PUBLIC_DIST_DIR
-fi
-cp -rf "${DIR_JSP_APP}/react-app/${BUILD_APP_PATH}/build" "${PHP_PUBLIC_DIST_DIR}"
+cp -rf "${DIR_REACT_APP}/build" "${DIST_SOURCE_CODE_DIR}/ui-bundle"
 
-printf "\n [-] rsync js server source \n\n"
-declare -a JS_SRC_FILES=( \
-    'app.prod.config.js' \
-    'package.json' \
-    'server' \
-    'migrations' \
-    'data' \
-    'core' \
-    'napi' \
-)
-DST_SERVER_JS_ROOT="${DIST_BUILD_SRC}/opt/wetribe/source/js-app"
-mkdir -p $DST_SERVER_JS_ROOT || panic "mkdir"
-for f in ${JS_SRC_FILES[@]}; do
-    fullPathSrc="${DIR_JSP_APP}/${f}"
-	if [ -f "${fullPathSrc}" ]; then
-		cp -f "$fullPathSrc" "${DST_SERVER_JS_ROOT}/"
-	elif [ -d "${fullPathSrc}" ]; then
-		cp -rf "$fullPathSrc" "${DST_SERVER_JS_ROOT}/"
-	else
-		panic "Invalid js file path (${fullPathSrc})"
-	fi
-done
 
-printf "\n [-] build js daemon \n\n"
+DIR_BACKEND_APP="${CURRENT_DIR}/packages/nodejs-backend"
+cd $DIR_BACKEND_APP || panic "cd"
+printf "\n [-] build backend app \n\n"
 if [ "$(uname)" = "Darwin" ]; then
-	docker run \
-	    --rm \
-	    -v "${DST_SERVER_JS_ROOT}:/source" \
-	    --entrypoint="/bin/sh" \
-	    frontmono/node:14.15.5-alpine-python \
-		-c "printf \"\\n\\t[-] Running js app build\\n\\n\" \
-			&& cd /source \
-			&& ls -all \
-			&& npm install --only=prod \
-			&& node --version"
+  rm -rf package-lock.json
+	# docker run \
+	#     --rm \
+	#     -v "${DIR_BACKEND_APP}:/source" \
+	#     --entrypoint="/bin/sh" \
+	#     node:16-slim \
+	# 	-c "printf \"\\n\\t[-] Running js app build\\n\\n\" \
+	# 		&& cd /source \
+	# 		&& ls -all \
+	# 		&& npm install --only=prod \
+  #     && npm run build
+	# 		&& node --version"
+  # echo "backend build done"
 else
-  	cd $DST_SERVER_JS_ROOT || panic "cd error ($DST_SERVER_JS_ROOT)"
-	npm install --only=prod
+  panic "todo in linux"
+	npm install
 fi
+cp -rf "${DIR_BACKEND_APP}" "${DIST_SOURCE_CODE_DIR}/backend-bundle"
 
-printf "\n [-] copy android file \n\n"
-ANDROID_DIST_DIR="${DIST_BUILD_SRC}/opt/wetribe/source/server-php/public/dist/apk"
-mkdir -p "${ANDROID_DIST_DIR}" || panic "mkdir failed"
-ANDROID_APK_LEGACY="${ANDROID_DIST_DIR}/legacy-${RELEASE_VER}.${CI_PIPELINE_ID}.apk"
-ANDROID_APK_RN="${ANDROID_DIST_DIR}/rn-${RELEASE_VER}.${CI_PIPELINE_ID}.apk"
-
-#cp -f "${CURRENT_DIR}/artifacts/android-dev-preview-debug.apk" "${ANDROID_APK_LEGACY}"
-cp -f "${CURRENT_DIR}/artifacts/android-rn-preview-release.apk" "${ANDROID_APK_RN}"
 
 ls -all "${DEST_DIR}"
-(cd "${DEST_DIR}" && time(dpkg-deb --build wetribe-web-server))
-DEB_FILE_NAME="${DEST_DIR}/wetribe-web-server.deb"
+
+(cd "${DEST_DIR}" && time(dpkg-deb --build redletter-final))
+DEB_FILE_NAME="${DEST_DIR}/redletter-final.deb"
 
 
 printf "\n [-] Build Success. Deploy file on [${DEB_FILE_NAME}] \n\n"
@@ -160,10 +116,9 @@ yyyymm=$(date +'%Y%m')
 dd=$(date +'%d')
 RESULT_S3_URL="s3://we-dev-harry/app-pkgs/${yyyymm}/${dd}/backend-${BUILD_VERSION}.deb"
 printf "\n [-] target s3 url [s3 cp ${DEB_FILE_NAME} ${RESULT_S3_URL}] \n\n"
-aws s3 cp "${DEB_FILE_NAME}" "${RESULT_S3_URL}"
+# aws s3 cp "${DEB_FILE_NAME}" "${RESULT_S3_URL}"
 
-
-
+# panic "todo"
 
 mkdir -p artifacts/
 cp -f "${DEB_FILE_NAME}" artifacts/

@@ -79,7 +79,6 @@ BUILD_VERSION=$(./deployment/sh-lib/get-build-version.sh)
 # panic "CHECK VERSION (${BUILD_VERSION})"
 
 "${VERSION_SCRIPT}"
-panic "todo"
 
 printf "\n [-] Packaging source \n\n"
 dpkg-deb --version || panic "Please install dpkg-dev by 'brew install dpkg'"

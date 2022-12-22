@@ -1,26 +1,26 @@
-import { Button } from "@windmill/react-ui";
-import { useStateMachine } from "little-state-machine";
-import React, { useRef, useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { FaLocationArrow } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import InputArea from "../../components/form/InputArea";
-import LabelArea from "../../components/form/LabelArea";
-import HeaderNavigator from "../../components/header-navigator/HeaderNavigator";
-import useEnsResolver from "../../hooks/useEnsResolver";
-import useQuery from "../../hooks/useQuery";
-import { truncateString } from "../../utils/string";
-import { notifySuccess } from "../../utils/toast";
-import { useNetwork } from "wagmi";
-import blockchain from "../../data/data.json";
+import { Button } from '@windmill/react-ui';
+import { useStateMachine } from 'little-state-machine';
+import React, { useRef, useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { FaLocationArrow } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import InputArea from '../../components/form/InputArea';
+import LabelArea from '../../components/form/LabelArea';
+import HeaderNavigator from '../../components/header-navigator/HeaderNavigator';
+import useEnsResolver from '../../hooks/useEnsResolver';
+import useQuery from '../../hooks/useQuery';
+import { truncateString } from '../../utils/string';
+import { notifySuccess } from '../../utils/toast';
+import { useNetwork } from 'wagmi';
+import blockchain from '../../data/data.json';
 
 const Confirmation = () => {
   const { chain } = useNetwork();
 
   const ref = useRef(null);
 
-  const [cardMessage, setCardMessage] = useState("");
-  const [copyValue, setCopyValue] = useState("");
+  const [cardMessage, setCardMessage] = useState('');
+  const [copyValue, setCopyValue] = useState('');
 
   const query = useQuery();
 
@@ -31,94 +31,77 @@ const Confirmation = () => {
 
     await navigator.clipboard.writeText(ref.current.value);
 
-    notifySuccess("Message Copied into Clipboard!");
+    notifySuccess('Message Copied into Clipboard!');
   };
 
   const generateCardMessage = async (templateId, blockId, from) => {
     if (!chain) return;
     const checkURL =
-      chain.blockExplorers.default.url + "/tx/" + query.get("tx");
+      chain.blockExplorers.default.url + '/tx/' + query.get('tx');
 
-    const companyWebsite =
-      process.env.NODE_ENV === "development"
-        ? `http://${window.location.hostname}:4001`
-        : `https://${window.location.hostname}`;
+    const companyWebsite = `https://${window.location.hostname}`;
 
-    const imageURL = query.get("imgUrl");
+    const imageURL = query.get('imgUrl');
 
     if (templateId === 0) {
       setCardMessage(
         <div>
           Merry Christmas from the Ethereum Block {blockId}! Check out my
-          festive @Redlettereth greeting card at{" "}
+          festival @Redlettereth greeting card at{' '}
           <a href={checkURL} className="underline text-blue-500">
             here
           </a>
           .
           <br />
           <br />
-          Join me sperading some web3-native cheer this holiday season! #ENS
-          #Redletter #MintYourGreetingCard #MerryChristmas #HappyHolidays
-          <br />
-          <br />
-          For more information, check Redletter's official website{" "}
+          For more information, check Redletter's official website{' '}
           <a className="underline text-blue-500" href={companyWebsite}>
             {companyWebsite}
           </a>
-        </div>
+        </div>,
       );
 
       setCopyValue(
         `
         Merry Christmas from the Ethereum Block ${blockId}! Check out my
-        festive @Redlettereth greeting card at ${checkURL}.
-     
-        Join me sperading some web3-native cheer this holiday season! #ENS
-        #Redletter #MintYourGreetingCard #MerryChristmas #HappyHolidays
+        festival @Redlettereth greeting card at ${checkURL}.
    
         For more information, check Redletter's official website ${companyWebsite}
-      `
+      `,
       );
     } else {
       setCardMessage(
         <div>
           Happy Holidays and warm wishes for the New Year from the Ethereum
-          Block {blockId}! Check out my festive @Redlettereth greeting card at{" "}
+          Block {blockId}! Check out my festival @Redlettereth greeting card at{' '}
           <a href={checkURL} className="underline text-blue-500">
             here
           </a>
           <br />
           <br />
-          Join me sperading some web3-native cheer this holiday season! #ENS
-          #Redletter #MintYourGreetingCard #MerryChristmas #HappyHolidays
-          <br />
-          <br />
-          For more information, check Redletter's official website{" "}
+          For more information, check Redletter's official website{' '}
           <a href={companyWebsite} className="underline text-blue-500">
             {companyWebsite}
           </a>
-        </div>
+        </div>,
       );
 
       setCopyValue(
         `
         Happy Holidays and warm wishes for the New Year from the Ethereum Block ${blockId}! Check out my
-        festive @Redlettereth greeting card at ${imageURL}.
-     
-        Join me sperading some web3-native cheer this holiday season! #ENS
-        #Redletter #MintYourGreetingCard #MerryChristmas #HappyHolidays
+        festival @Redlettereth greeting card at ${imageURL}.
    
         For more information, check Redletter's official website ${companyWebsite}
-      `
+      `,
       );
     }
   };
 
   useEffect(() => {
     generateCardMessage(
-      query.get("cardId"),
-      query.get("block"),
-      query.get("recipientAddress")
+      query.get('cardId'),
+      query.get('block'),
+      query.get('recipientAddress'),
     );
   }, []);
 
@@ -126,7 +109,7 @@ const Confirmation = () => {
     <div className="p-4">
       <div className="flex flex-col space-y-8">
         <div className="">
-          <img src={`/img/step3-${query.get("step")}.svg`} alt="step" />
+          <img src={`/img/step3-${query.get('step')}.svg`} alt="step" />
         </div>
 
         <div className="text-4xl font-bold tracking-tight">

@@ -1,29 +1,27 @@
-import { useStateMachine } from "little-state-machine";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import useQuery from "../../hooks/useQuery";
-import { Button } from "@windmill/react-ui";
-import HeaderNavigator from "../../components/header-navigator/HeaderNavigator";
-import PageTitle from "../../components/page-title/PageTitle";
-import useImgGenerator from "../../hooks/useImgGenerator";
-import { useContext, useEffect, useState } from "react";
-import { AdminContext } from "../../context/AdminContext";
-import { notifyError, notifySuccess } from "../../utils/toast";
-import useContract from "../../hooks/useContract";
-import GREETING_CARD from "../../contracts/GreetingCard.json";
-import useTokenURI from "../../hooks/useTokenURI";
-import GreetingServices from "../../services/GreetingServices";
+import { useStateMachine } from 'little-state-machine';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import useQuery from '../../hooks/useQuery';
+import { Button } from '@windmill/react-ui';
+import HeaderNavigator from '../../components/header-navigator/HeaderNavigator';
+import PageTitle from '../../components/page-title/PageTitle';
+import useImgGenerator from '../../hooks/useImgGenerator';
+import { useContext, useEffect, useState } from 'react';
+import { AdminContext } from '../../context/AdminContext';
+import { notifyError, notifySuccess } from '../../utils/toast';
+import useContract from '../../hooks/useContract';
+import GREETING_CARD from '../../contracts/GreetingCard.json';
+import useTokenURI from '../../hooks/useTokenURI';
+import GreetingServices from '../../services/GreetingServices';
 import {
   updateCardDetails,
   clearCardDetails,
-} from "../../actions/updateCardDetails";
-import blockchain from "../../data/data.json";
-import { useNetwork } from "wagmi";
+} from '../../actions/updateCardDetails';
+import blockchain from '../../data/data.json';
+import { useNetwork } from 'wagmi';
 
 const Preview = () => {
   const { chain } = useNetwork();
-
-  console.log(chain);
 
   const {
     state: { user },
@@ -35,7 +33,7 @@ const Preview = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState('');
 
   const { getImage } = useImgGenerator();
 
@@ -47,7 +45,7 @@ const Preview = () => {
   const navigate = useNavigate();
 
   const onPressBack = () => {
-    navigate("/greeting-card", { replace: true });
+    navigate('/greeting-card', { replace: true });
   };
 
   const onSubmit = async (data) => {
@@ -57,7 +55,7 @@ const Preview = () => {
       `/greeting-card/confirmation?step=3&tx=${result.transactionId}&block=${result.blockNumber}&imgUrl=${result.imgUrl}&cardId=${state.cardInfo.selectedCard.id}&recipient=${state.cardInfo.recipientAddress}`,
       {
         replace: true,
-      }
+      },
     );
 
     actions.clearCardDetails();
@@ -70,9 +68,9 @@ const Preview = () => {
     let contractAddress;
 
     if (!chain) {
-      notifyError("Check your network!");
+      notifyError('Check your network!');
     } else {
-      if (chain.network === "goerli") {
+      if (chain.network === 'goerli') {
         contractAddress = blockchain.contracts.greetingCard.goerli;
       } else {
         contractAddress = blockchain.contracts.greetingCard.mainnet;
@@ -82,23 +80,23 @@ const Preview = () => {
         setLoading(true);
         const contract = await getContract(contractAddress, GREETING_CARD.abi);
         if (!contract) {
-          throw new Error("Ooops! contract was not imported!");
+          throw new Error('Ooops! contract was not imported!');
         }
 
         const image = await getImage(state.cardInfo, user.address);
 
         const tokenURI = await getTokenURI(
           {
-            name: "RedLetter Greeting Card",
+            name: 'RedLetter Greeting Card',
             description: state.cardInfo.description,
             image: image.toURL(),
           },
-          "rl/gc"
+          'rl/gc',
         );
 
         const mintTxn = await contract.safeMint(
           state.cardInfo.recipientAddress,
-          tokenURI
+          tokenURI,
         );
 
         const receipt = await mintTxn.wait();
@@ -147,10 +145,10 @@ const Preview = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col space-y-6"
       >
-        <PageTitle text={"Preview"} />
+        <PageTitle text={'Preview'} />
 
         <div>
-          <img src={`/img/step3-${query.get("step")}.svg`} alt="step" />
+          <img src={`/img/step3-${query.get('step')}.svg`} alt="step" />
         </div>
 
         <span className=" text-gray-500 ">
@@ -187,7 +185,7 @@ const Preview = () => {
           className="w-full"
           disabled={loading}
         >
-          {loading ? "Wait..." : "Confirm"}
+          {loading ? 'Wait...' : 'Confirm'}
         </Button>
       </form>
     </div>

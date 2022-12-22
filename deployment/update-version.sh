@@ -10,5 +10,5 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 # Debian Package
-$SED -i "s/##version##/${APP_VERSION}/" deployment/production/wt-backend/DEBIAN/control
+$SED -i "s/##version##/${APP_VERSION}/" deployment/production/redletter/DEBIAN/control
 $SED -i "s/##version##/${APP_VERSION}/" packages/react-frontend/src/components/desktop/global-components/footer-v2.js

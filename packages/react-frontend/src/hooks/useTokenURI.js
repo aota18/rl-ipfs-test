@@ -1,12 +1,15 @@
-import Moralis from "moralis";
-import React from "react";
+import Moralis from 'moralis';
+import React from 'react';
+
+const MORALIS_API_KEY =
+  '5ypDxqSS2fSeXXzNoaCSx3Ngzcc8ZCYRRqh7ZQYHm30GZEGLJNiEuYbhoawmPHGH';
 
 const useTokenURI = () => {
   const getTokenURI = async (objToEncode, abiPath) => {
     const encodedURI = btoa(JSON.stringify(objToEncode));
 
     await Moralis.start({
-      apiKey: process.env.REACT_APP_MORALIS_API_KEY,
+      apiKey: MORALIS_API_KEY,
     });
 
     const abi = [

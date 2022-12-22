@@ -84,7 +84,6 @@ class Footer_V2 extends Component {
               className="copyright-text text-gray-500"
               dangerouslySetInnerHTML={{ __html: footerdata.copyrighttext }}
             ></div>
-            <div>Version: ##version##</div>
           </div>
         </footer>
         <div className="back-to-top">
