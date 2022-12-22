@@ -1,0 +1,33 @@
+# References:
+#     http://geekyplatypus.com/dockerise-your-php-application-with-nginx-and-php7-fpm/
+#
+
+version: "3"
+
+networks:
+  rt_net:
+    driver: bridge
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: $NET_SUBNET
+
+services:
+  nginx:
+    image: nginx:1.20.0-alpine-perl
+    networks:
+      default:
+      rt_net:
+        ipv4_address: $NET_IP_NGINX
+    ports:
+      - $NET_PORT_NGINX:80
+    volumes:
+      - ./deployment/development/nginx:/config-root:ro
+      - ./deployment/development/nginx/mime.types:/etc/nginx/mime.types:ro
+      - ./.env:/config-env/envFile:ro
+      - ./.tmp-no-git-working/docker/upload:/etc/redletter/data/upload:rw
+      - ./packages:/www:ro
+    entrypoint: /config-root/entrypoint.sh
+    environment:
+      HOST_IP: $CURRENT_DEV_HOST_IP
