@@ -1,37 +1,35 @@
-import { useStateMachine } from "little-state-machine";
-import { updateCardDetails } from "../../actions/updateCardDetails";
-import React, { useState } from "react";
-import PageTitle from "../../components/page-title/PageTitle";
-import { Controller, useForm } from "react-hook-form";
-import LabelArea from "../../components/form/LabelArea";
-import InputArea from "../../components/form/InputArea";
-import Error from "../../components/form/Error";
-import { Button, Input } from "@windmill/react-ui";
-import TagList from "../../components/tags/TagList";
-import HeaderNavigator from "../../components/header-navigator/HeaderNavigator";
-import { useNavigate } from "react-router-dom";
-import CardSelectList from "../../components/card-select/CardSelectList";
-import useEnsResolver from "../../hooks/useEnsResolver";
-import InputValue from "../../components/form/InputValue";
-import TextArea from "../../components/form/TextArea";
+import { useStateMachine } from 'little-state-machine';
+import { updateCardDetails } from '../../actions/updateCardDetails';
+import React, { useState } from 'react';
+import PageTitle from '../../components/page-title/PageTitle';
+import { Controller, useForm } from 'react-hook-form';
+import LabelArea from '../../components/form/LabelArea';
+import Error from '../../components/form/Error';
+import { Button, Input } from '@windmill/react-ui';
+import TagList from '../../components/tags/TagList';
+import HeaderNavigator from '../../components/header-navigator/HeaderNavigator';
+import { useNavigate } from 'react-router-dom';
+import CardSelectList from '../../components/card-select/CardSelectList';
+import useEnsResolver from '../../hooks/useEnsResolver';
+import TextArea from '../../components/form/TextArea';
 
 const cardSelectItems = [
   {
     id: 0,
-    url: "/img/card1.png",
-    publicId: "card1_inycxs_vmgzlu",
+    url: '/img/card1.png',
+    publicId: 'card1_inycxs_vmgzlu',
     color: {
-      description: "#a02526",
-      fromTo: "#dda062",
+      description: '#a02526',
+      fromTo: '#dda062',
     },
   },
   {
     id: 1,
-    url: "/img/card2.png",
-    publicId: "card2_apnkry_rea1av",
+    url: '/img/card2.png',
+    publicId: 'card2_apnkry_rea1av',
     color: {
-      description: "#dda062",
-      fromTo: "#a02526",
+      description: '#dda062',
+      fromTo: '#a02526',
     },
   },
 ];
@@ -50,7 +48,7 @@ const CardDetails = () => {
 
   const onSelectCard = (id) => {
     setSelectedCard(cardSelectItems[id]);
-    setValue("selectedCard", cardSelectItems[id]);
+    setValue('selectedCard', cardSelectItems[id]);
   };
 
   const { actions, state } = useStateMachine({ updateCardDetails });
@@ -70,18 +68,18 @@ const CardDetails = () => {
 
   const onSubmit = (data) => {
     actions.updateCardDetails(data);
-    navigate("/greeting-card/preview?step=2");
+    navigate('/greeting-card/preview?step=2');
   };
 
   const onPressBack = () => {
-    navigate("/", { replace: true });
+    navigate('/', { replace: true });
   };
 
   const onChangeAddress = async (e, onChange) => {
     const value = e.target.value;
     onChange(value);
 
-    if (value.startsWith("0x")) {
+    if (value.startsWith('0x')) {
       const name = await getENSFromAddress(value);
 
       if (name) {
@@ -94,7 +92,7 @@ const CardDetails = () => {
 
       if (address) {
         setResolved(address);
-        setValue("recipientAddress", address);
+        setValue('recipientAddress', address);
       } else {
         setResolved(null);
       }
@@ -105,7 +103,7 @@ const CardDetails = () => {
     <div className="p-4">
       <HeaderNavigator back onPressBack={onPressBack} />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <PageTitle text={"Card Details"} />
+        <PageTitle text={'Card Details'} />
 
         <div className="my-6">
           <img src={`/img/step3-1.svg`} alt="step" />
@@ -130,7 +128,7 @@ const CardDetails = () => {
           <div className="col-span-8 space-y-2">
             <LabelArea label="Select NFT Template" />
 
-            <input {...register("selectedCard")} name="selectedCard" hidden />
+            <input {...register('selectedCard')} name="selectedCard" hidden />
             <CardSelectList
               items={cardSelectItems}
               onSelectCard={onSelectCard}
@@ -151,7 +149,7 @@ const CardDetails = () => {
                 <Input
                   onChange={(e) => onChangeAddress(e, onChange)}
                   value={value}
-                  placeholder={"Wallet address OR ENS name"}
+                  placeholder={'Wallet address OR ENS name'}
                   className="border h-10 text-sm focus:outline-none block w-full dark:bg-white border-transparent focus:bg-white"
                 />
               )}
@@ -160,7 +158,7 @@ const CardDetails = () => {
             <Error errorName={errors.recipientAddress} />
             {resolved ? (
               <div className="text-gray-500 text-sm mt-2">
-                Address was resolved to{" "}
+                Address was resolved to{' '}
                 <span className="text-success">{resolved}</span>
               </div>
             ) : (

@@ -6,7 +6,6 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
 } from '@nestjs/common';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { SearchOption } from '../interfaces/pagination.interface';
@@ -25,6 +24,7 @@ import { UsersService } from '../users/users.service';
 import { TicketService } from '../ticket/ticket.service';
 import { Sbt } from '../sbt/entities/sbt.entity';
 import { BaseOutput } from '../base/base-output.dto';
+import sendRelay from '../blockchain/relay';
 
 @Injectable()
 export class EventsService {
@@ -352,6 +352,7 @@ export class EventsService {
       return false;
     }
   }
+
   /* 
    TODO: Update Event 
   */

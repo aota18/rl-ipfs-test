@@ -22,6 +22,7 @@
     "currency-symbol-map": "^5.0.1",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.5",
+    "dns-packet": "^5.4.0",
     "eth-ens-namehash": "^2.0.8",
     "gif-frames": "^1.0.1",
     "gsap": "^3.11.3",

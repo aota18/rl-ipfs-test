@@ -1,17 +1,17 @@
-import { Button, Input } from "@windmill/react-ui";
-import { useStateMachine } from "little-state-machine";
-import React, { useState } from "react";
-import { Controller } from "react-hook-form";
-import { useNavigate, useRouteMatch } from "react-router-dom";
-import Error from "../../components/form/Error";
-import InputArea from "../../components/form/InputArea";
-import HeaderNavigator from "../../components/header-navigator/HeaderNavigator";
-import useEnsResolver from "../../hooks/useEnsResolver";
-import useQuery from "../../hooks/useQuery";
-import useSignupSubmit from "../../hooks/useSignupSubmit";
-import { updateSignupInfo } from "./updateAction";
-import { ethers } from "ethers";
-import { notifyError } from "../../utils/toast";
+import { Button, Input } from '@windmill/react-ui';
+import { useStateMachine } from 'little-state-machine';
+import React, { useState } from 'react';
+import { Controller } from 'react-hook-form';
+import { useNavigate, useRouteMatch } from 'react-router-dom';
+import Error from '../../components/form/Error';
+import InputArea from '../../components/form/InputArea';
+import HeaderNavigator from '../../components/header-navigator/HeaderNavigator';
+import useEnsResolver from '../../hooks/useEnsResolver';
+import useQuery from '../../hooks/useQuery';
+import useSignupSubmit from '../../hooks/useSignupSubmit';
+import { updateSignupInfo } from './updateAction';
+import { ethers } from 'ethers';
+import { notifyError } from '../../utils/toast';
 
 const EnsSubdomain = () => {
   const query = useQuery();
@@ -20,23 +20,45 @@ const EnsSubdomain = () => {
   const { register, handleSubmit, errors, loading, getValues, control } =
     useSignupSubmit(state);
 
-  const { getAddressfromENS, createSubdomain } = useEnsResolver();
+  const {
+    getAddressfromENS,
+    createSubdomain,
+    registerAndWrap,
+    createSubdomain_NameWrapper,
+    wrapSubdomain,
+  } = useEnsResolver();
 
   const [resolved, setResolved] = useState(null);
 
   const navigate = useNavigate();
 
+  const onClickCreateBtnWrap = async () => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.listAccounts();
+      const to = accounts[0];
+      const subdomain = getValues('ens');
+      const duration = 60 * 60 * 24 * 365;
+
+      const result = await wrapSubdomain(subdomain, to);
+
+      console.log(result);
+    } catch (err) {
+      notifyError(err);
+    }
+  };
+
   const onSubmit = (data) => {
     actions.updateSignupInfo(data);
-    navigate(`/signup/set-location?step=${parseInt(query.get("step")) + 1}`);
+    navigate(`/signup/set-location?step=${parseInt(query.get('step')) + 1}`);
   };
 
   const onChangeEns = async (e, onChange) => {
     const value = e.target.value;
-    const fullDomain = value + ".danielseo.eth";
+    const fullDomain = value + '.danielseo.eth';
     onChange(value);
 
-    if (!value || value === "") {
+    if (!value || value === '') {
       return;
     }
 
@@ -53,7 +75,7 @@ const EnsSubdomain = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const accounts = await provider.listAccounts();
       const to = accounts[0];
-      const subdomain = getValues("ens");
+      const subdomain = getValues('ens');
 
       console.log(to, subdomain);
 
@@ -71,7 +93,7 @@ const EnsSubdomain = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col h-full space-y-10">
           <div className="">
-            <img src={`/step4-${query.get("step")}.svg`} />
+            <img src={`/step4-${query.get('step')}.svg`} />
           </div>
 
           <div className="text-2xl font-bold mb-2">
@@ -99,11 +121,11 @@ const EnsSubdomain = () => {
             {resolved !== null ? (
               !resolved ? (
                 <div className="text-success text-sm mt-2">
-                  This domain is available{" "}
+                  This domain is available{' '}
                 </div>
               ) : (
                 <div className="text-danger text-sm mt-2">
-                  This domain is not available{" "}
+                  This domain is not available{' '}
                 </div>
               )
             ) : (
@@ -113,7 +135,7 @@ const EnsSubdomain = () => {
 
           <div>
             <Button
-              onClick={() => onClickCreateBtn()}
+              onClick={() => onClickCreateBtnWrap()}
               disabled={loading}
               className="mt-4 h-12 w-full"
               block

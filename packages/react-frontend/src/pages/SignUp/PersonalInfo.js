@@ -1,25 +1,25 @@
-import { Button } from "@windmill/react-ui";
-import Error from "../../components/form/Error";
-import InputArea from "../../components/form/InputArea";
-import LabelArea from "../../components/form/LabelArea";
-import SelectGender from "../../components/form/SelectGender";
-import SelectMarried from "../../components/form/SelectMarried";
-import SelectNationality from "../../components/form/SelectNationality";
-import useSignupSubmit from "../../hooks/useSignupSubmit";
-import ProfileImgUploader from "../../components/profile-img-uploader/ProfileImgUploader";
-import { useNavigate } from "react-router-dom";
-import { useStateMachine } from "little-state-machine";
-import { updateSignupInfo } from "./updateAction";
-import { useEffect, useState } from "react";
-import DatePicker from "../../components/form/DatePicker";
-import useQuery from "../../hooks/useQuery";
-import PageTitle from "../../components/page-title/PageTitle";
-import { Controller } from "react-hook-form";
-import "react-day-picker/dist/style.css";
-import { notifyError } from "../../utils/toast";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
-import AuthServices from "../../services/AuthServices";
+import { Button } from '@windmill/react-ui';
+import Error from '../../components/form/Error';
+import InputArea from '../../components/form/InputArea';
+import LabelArea from '../../components/form/LabelArea';
+import SelectGender from '../../components/form/SelectGender';
+import SelectMarried from '../../components/form/SelectMarried';
+import SelectNationality from '../../components/form/SelectNationality';
+import useSignupSubmit from '../../hooks/useSignupSubmit';
+import ProfileImgUploader from '../../components/profile-img-uploader/ProfileImgUploader';
+import { useNavigate } from 'react-router-dom';
+import { useStateMachine } from 'little-state-machine';
+import { updateSignupInfo } from './updateAction';
+import { useEffect, useState } from 'react';
+import DatePicker from '../../components/form/DatePicker';
+import useQuery from '../../hooks/useQuery';
+import PageTitle from '../../components/page-title/PageTitle';
+import { Controller } from 'react-hook-form';
+import 'react-day-picker/dist/style.css';
+import { notifyError } from '../../utils/toast';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import AuthServices from '../../services/AuthServices';
 
 const PersonalInfo = () => {
   const { isConnected, account } = useAccount();
@@ -39,7 +39,7 @@ const PersonalInfo = () => {
 
   const onSubmit = (data) => {
     actions.updateSignupInfo(data);
-    navigate(`/signup/set-location?step=4`);
+    navigate(`/signup/ens-subdomain?step=3`);
   };
 
   const connectWallet = async () => {
@@ -57,8 +57,8 @@ const PersonalInfo = () => {
 
       /* If user already has an account, go to login page */
       if (user && !user.isGuest) {
-        notifyError("You already have an acccount!");
-        navigate("/", { replace: true });
+        notifyError('You already have an acccount!');
+        navigate('/', { replace: true });
       }
 
       /* If user doesn't have an account at all, create new guest account */
@@ -86,8 +86,8 @@ const PersonalInfo = () => {
           </div>
           <div className="col-span-8">
             <img
-              src={`/step4-${query.get("step")}.svg`}
-              alt={`step-${query.get("step")}`}
+              src={`/step4-${query.get('step')}.svg`}
+              alt={`step-${query.get('step')}`}
             />
           </div>
           <div className="col-span-8 my-2">
@@ -211,7 +211,7 @@ const PersonalInfo = () => {
             <Error errorName={errors.married} />
           </div>
 
-          {married === "YES" ? (
+          {married === 'YES' ? (
             <div className="col-span-8 space-y-2">
               <LabelArea label="Date of Marriage" />
 

@@ -1,3 +1,25 @@
+# Third Party API
+- Moralis (web3 library)
+- Cuttly[https://cutt.ly/] (URL Shortener)
+    - email : redletter888@gmail.com
+    - password : Redletter@2022
+    - API Docs : https://cutt.ly/api-documentation/regular-api
+- Cloudinary (Image manipulation over API)
+
+
+
+
+# Local Development Environment
+
+```
+./cli/start.sh docker
+```
+
+This commands enable **React app** on `localhost:9090` and **Nodejs** on `localhost:9092`.
+See `.env` for more config variable.
+
+# Deploy on Production Server
+
 1. build
 
 ```

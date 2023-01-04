@@ -1,20 +1,21 @@
-import { lazy } from "react";
+import { lazy } from 'react';
+import EnsSubdomain from '../pages/SignUp/EnsSubdomain';
 
 // use lazy for better code splitting
-const Home = lazy(() => import("../pages/Home"));
-const Explore = lazy(() => import("../pages/Explore"));
-const Tickets = lazy(() => import("../pages/Tickets"));
-const TicketDetail = lazy(() => import("../pages/TicketDetail"));
-const CreateEvent = lazy(() => import("../pages/CreateEvent"));
-const GreetingCard = lazy(() => import("../pages/GreetingCard"));
-const MyEvents = lazy(() => import("../pages/MyEvents"));
-const EventDetail = lazy(() => import("../pages/EventDetail"));
-const Profile = lazy(() => import("../pages/Profile"));
-const EventSearch = lazy(() => import("../pages/EventSearch"));
+const Home = lazy(() => import('../pages/Home'));
+const Explore = lazy(() => import('../pages/Explore'));
+const Tickets = lazy(() => import('../pages/Tickets'));
+const TicketDetail = lazy(() => import('../pages/TicketDetail'));
+const CreateEvent = lazy(() => import('../pages/CreateEvent'));
+const GreetingCard = lazy(() => import('../pages/GreetingCard'));
+const MyEvents = lazy(() => import('../pages/MyEvents'));
+const EventDetail = lazy(() => import('../pages/EventDetail'));
+const Profile = lazy(() => import('../pages/Profile'));
+const EventSearch = lazy(() => import('../pages/EventSearch'));
 // const Setting = lazy(() => import("../pages/Setting"));
-const Page404 = lazy(() => import("../pages/404"));
-const ReadMore = lazy(() => import("../pages/ReadMore"));
-const Test = lazy(() => import("../pages/Test"));
+const Page404 = lazy(() => import('../pages/404'));
+const ReadMore = lazy(() => import('../pages/ReadMore'));
+const Test = lazy(() => import('../pages/Test'));
 
 /*
 //  * ⚠ These are internal routes!
@@ -29,55 +30,60 @@ const Test = lazy(() => import("../pages/Test"));
 
 const routes = [
   {
-    path: "/home",
+    path: '/home',
     element: <Home />,
   },
   {
-    path: "/explore",
+    path: '/explore',
     element: <Explore />,
   },
   {
-    path: "/create-event/*",
+    path: '/create-event/*',
     element: <CreateEvent />,
   },
   {
-    path: "/greeting-card/*",
+    path: '/greeting-card/*',
     element: <GreetingCard />,
   },
   {
-    path: "/tickets",
+    path: '/tickets',
     element: <Tickets />,
   },
   {
-    path: "/my-events",
+    path: '/my-events',
     element: <MyEvents />,
   },
   {
-    path: "/ticket",
+    path: '/ticket',
     element: <TicketDetail />,
   },
   {
-    path: "/event/*",
+    path: '/event/*',
     element: <EventDetail />,
   },
   {
-    path: "/profile/*",
+    path: '/profile/*',
     element: <Profile />,
   },
   {
-    path: "/search",
+    path: '/search',
     element: <EventSearch />,
   },
   {
-    path: "/read-more",
+    path: '/ens-subdomain',
+    element: <EnsSubdomain />,
+  },
+
+  {
+    path: '/read-more',
     element: <ReadMore />,
   },
   {
-    path: "/test",
+    path: '/test',
     element: <Test />,
   },
   {
-    path: "/404",
+    path: '/404',
     element: <Page404 />,
   },
 ];

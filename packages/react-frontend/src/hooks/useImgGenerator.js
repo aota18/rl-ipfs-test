@@ -39,6 +39,10 @@ const useImgGenerator = () => {
     let fromAddress = await resolveAddress(from);
     let toAddress = await resolveAddress(cardInfo.recipientAddress);
 
+    // Encode Address for emoji
+    fromAddress = encodeURI(fromAddress);
+    toAddress = encodeURI(toAddress);
+
     let fromPosition;
     let toPosition;
 

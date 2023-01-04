@@ -52,7 +52,7 @@ const Preview = () => {
     const result = await mintGreetingCard();
 
     navigate(
-      `/greeting-card/confirmation?step=3&tx=${result.transactionId}&block=${result.blockNumber}&imgUrl=${result.imgUrl}&cardId=${state.cardInfo.selectedCard.id}&recipient=${state.cardInfo.recipientAddress}`,
+      `/greeting-card/confirmation?step=3&tx=${result.transactionId}&block=${result.blockNumber}&imgUrl=${result.imgUrl}&cardId=${state.cardInfo.selectedCard.id}&recipient=${state.cardInfo.recipientAddress}&shortURL=${result.shortUrl}`,
       {
         replace: true,
       },
@@ -64,6 +64,72 @@ const Preview = () => {
   const { getContract } = useContract();
   const { getTokenURI } = useTokenURI();
 
+  const mintFreeGreetingCard = async () => {
+    let contractAddress = blockchain.contracts.greetingCard.mumbai;
+
+    if (!chain || chain.network !== 'mumbai') {
+      notifyError('Check your network! ');
+    } else {
+      try {
+      } catch (err) {
+        setLoading(true);
+        const contract = await getContract(contractAddress, GREETING_CARD.abi);
+        if (!contract) {
+          throw new Error('Ooops! contract was not imported!');
+        }
+
+        const image = await getImage(state.cardInfo, user.address);
+
+        if (!image) {
+          throw new Error('Cannot get Image!');
+        }
+
+        const tokenURI = await getTokenURI(
+          {
+            name: 'RedLetter Greeting Card',
+            description: state.cardInfo.description,
+            image: image.toURL(),
+          },
+          'rl/gc',
+        );
+
+        if (!tokenURI) {
+          throw new Error('Cannot get Token URI!');
+        }
+
+        const mintTxn = await contract.safeMint(
+          state.cardInfo.recipientAddress,
+          tokenURI,
+        );
+
+        const receipt = await mintTxn.wait();
+
+        const transactionId = receipt.transactionHash;
+        const blockNumber = receipt.blockNumber;
+
+        const result = await GreetingServices.createGreeting({
+          from: user.address,
+          to: state.cardInfo.recipientAddress,
+          description: state.cardInfo.description,
+          transactionId,
+          imgUrl: image.toURL(),
+        });
+
+        if (result.status !== 200) {
+          throw new Error(result.message);
+        }
+
+        setLoading(false);
+
+        notifySuccess(result.message);
+
+        result.data.blockNumber = blockNumber;
+
+        return result.data;
+      }
+    }
+  };
+
   const mintGreetingCard = async () => {
     let contractAddress;
 
@@ -73,7 +139,7 @@ const Preview = () => {
       if (chain.network === 'goerli') {
         contractAddress = blockchain.contracts.greetingCard.goerli;
       } else {
-        contractAddress = blockchain.contracts.greetingCard.mainnet;
+        contractAddress = blockchain.contracts.greetingCard.ethereum;
       }
 
       try {
@@ -85,6 +151,10 @@ const Preview = () => {
 
         const image = await getImage(state.cardInfo, user.address);
 
+        if (!image) {
+          throw new Error('Cannot get Image!');
+        }
+
         const tokenURI = await getTokenURI(
           {
             name: 'RedLetter Greeting Card',
@@ -93,6 +163,10 @@ const Preview = () => {
           },
           'rl/gc',
         );
+
+        if (!tokenURI) {
+          throw new Error('Cannot get Token URI!');
+        }
 
         const mintTxn = await contract.safeMint(
           state.cardInfo.recipientAddress,
@@ -124,8 +198,9 @@ const Preview = () => {
 
         return result.data;
       } catch (err) {
-        notifyError(err.message);
+        notifyError('Check if recipient address is valid!');
         setLoading(false);
+        return;
       }
     }
   };
@@ -133,13 +208,11 @@ const Preview = () => {
   useEffect(async () => {
     const image = await getImage(state.cardInfo, user.address);
 
-    console.log(image);
-
     setImage(image);
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="p-4 truncate">
       <HeaderNavigator back onPressBack={onPressBack} />
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -174,10 +247,23 @@ const Preview = () => {
 
         {image && <img src={image.toURL()} alt="hh" />}
 
-        <div className="space-y-2">
+        <div
+          className="space-y-2 truncate
+      "
+        >
           <h3 className="font-bold">Recipient Address</h3>
-          {state.cardInfo.recipientAddress}
+          <div className="truncate">{state.cardInfo.recipientAddress}</div>
         </div>
+
+        {/* <Button
+          type="button"
+          layout="primary"
+          className="w-full"
+          onClick={() => mintFreeGreetingCard()}
+          disabled={loading}
+        >
+          {loading ? 'Wait...' : 'Confirm (Free Minting)'}
+        </Button> */}
 
         <Button
           type="submit"

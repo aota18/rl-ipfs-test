@@ -5,4 +5,5 @@ export class CreateGreetingDto {
   imgUrl: string;
   cloudinaryUrl: string;
   transactionId: string;
+  chainId: number;
 }

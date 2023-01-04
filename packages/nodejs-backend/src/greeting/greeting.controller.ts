@@ -18,6 +18,11 @@ import { SearchOption } from '../interfaces/pagination.interface';
 export class GreetingController {
   constructor(private readonly greetingService: GreetingService) {}
 
+  @Post('/free')
+  freeMint(@Body() body) {
+    return this.greetingService.freeMint(body);
+  }
+
   @Post()
   create(@Body() createGreetingDto: CreateGreetingDto) {
     return this.greetingService.create(createGreetingDto);
@@ -26,6 +31,12 @@ export class GreetingController {
   @Get()
   findAll(@Query() option: SearchOption) {
     return this.greetingService.findAll(option);
+  }
+
+  @Get('test')
+  test(@Query() query) {
+    console.log('CHECK===1', query);
+    return this.greetingService.test(query);
   }
 
   @Get(':id')

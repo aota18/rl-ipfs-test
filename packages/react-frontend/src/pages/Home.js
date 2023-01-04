@@ -1,23 +1,24 @@
-import { Button, Transition } from "@windmill/react-ui";
-import { useContext, useEffect, useRef, useState } from "react";
-import HeaderNavigator from "../components/header-navigator/HeaderNavigator";
-import Tab from "../components/tab/Tab";
-import useToggleDrawer from "../hooks/useToggleDrawer";
-import ImageSlider from "../components/image-slider/ImageSlider";
-import SectionDivider from "../components/section-divider/SectionDivider";
-import EventList from "../components/events/EventList";
-import AboutList from "../components/about/AboutList";
-import { Link } from "react-router-dom";
-import { generateMockEvents } from "../utils/mock";
-import { AdminContext } from "../context/AdminContext";
-import { truncateString } from "../utils/string";
-import { isDesktop, isMobile } from "react-device-detect";
-import { SidebarContext } from "../context/SidebarContext";
-import DesktopHome from "./DesktopHome";
+import { Button, Transition } from '@windmill/react-ui';
+import { useContext, useEffect, useRef, useState } from 'react';
+import HeaderNavigator from '../components/header-navigator/HeaderNavigator';
+import Tab from '../components/tab/Tab';
+import useToggleDrawer from '../hooks/useToggleDrawer';
+import ImageSlider from '../components/image-slider/ImageSlider';
+import SectionDivider from '../components/section-divider/SectionDivider';
+import EventList from '../components/events/EventList';
+import AboutList from '../components/about/AboutList';
+import { Link } from 'react-router-dom';
+import { generateMockEvents } from '../utils/mock';
+import { AdminContext } from '../context/AdminContext';
+import { truncateString } from '../utils/string';
+import { isDesktop, isMobile } from 'react-device-detect';
+import { SidebarContext } from '../context/SidebarContext';
+import DesktopHome from './DesktopHome';
+import { useNetwork } from 'wagmi';
 
 const aboutItems = [
   {
-    img: "/about-medal.svg",
+    img: '/about-medal.svg',
     title: (
       <div className="text-3xl font-bold text-white">
         Forever keep <br /> who you are
@@ -31,7 +32,7 @@ const aboutItems = [
     ),
   },
   {
-    img: "/about-chain.svg",
+    img: '/about-chain.svg',
     title: <div className="text-3xl font-bold text-white">Soul-bound</div>,
     description: (
       <p className="text-gray-500 text-center">
@@ -41,7 +42,7 @@ const aboutItems = [
     ),
   },
   {
-    img: "/about-puzzle.svg",
+    img: '/about-puzzle.svg',
     title: (
       <div className="text-3xl font-bold text-white text-center">
         Your memories,
@@ -58,6 +59,8 @@ const aboutItems = [
 ];
 
 const Home = () => {
+  const { chain } = useNetwork();
+
   const { handleModalOpen } = useToggleDrawer();
   const {
     state: { user },
@@ -88,13 +91,13 @@ const Home = () => {
       </div> */}
 
         <div className="flex my-4 mx-4 justify-between items-center ">
-          <SectionDivider title={"About RedLetter"} />
+          <SectionDivider title={'About RedLetter'} />
 
           {user ? (
             <span>{truncateString(user.address, 10)}</span>
           ) : (
             <Button
-              onClick={() => handleModalOpen("walletSelect")}
+              onClick={() => handleModalOpen('walletSelect')}
               disabled={false}
               className="mt-4 h-8 w-auto"
             >
@@ -115,13 +118,13 @@ const Home = () => {
             <div className="flex flex-col space-y-4 text-gray-400">
               <p>
                 As an on-chain ceremony, RedLetter stores your precious moments
-                and life records on the blockchain forever.{" "}
+                and life records on the blockchain forever.{' '}
               </p>
 
               <p>
                 Those who attend or congratulate these events will be given a
                 special permanent digital badge (SBT - Soul Bound Token) to
-                commemorate their participation.{" "}
+                commemorate their participation.{' '}
               </p>
 
               <p>
@@ -137,7 +140,7 @@ const Home = () => {
           <div
             style={{
               background: `linear-gradient(to bottom, #000000 0%, #ffffff 15%, #ffffff 85%, #000000 100%)`,
-              height: "370px",
+              height: '370px',
             }}
             className="flex flex-col justify-center items-center"
           >
@@ -148,9 +151,9 @@ const Home = () => {
               <span
                 style={{
                   background: `linear-gradient(to right, rgba(201,92,102,1) 0%, rgba(167,51,155,1) 100%)`,
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
                 }}
               >
                 Forever.

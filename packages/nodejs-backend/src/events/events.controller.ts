@@ -8,7 +8,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -16,7 +15,6 @@ import {
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { User } from '../auth/auth.decorator';
 import { JwtAuthGuard } from '../auth/auth.guard';
-import { imageFilter } from '../controllers/file-helper';
 import { SearchOption } from '../interfaces/pagination.interface';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -45,6 +43,11 @@ export class EventsController {
   ) {
     return this.eventsService.create(user, files, createEventDto);
   }
+
+  // @Post('/relay-launch')
+  // async relayLaunch(@Body() body) {
+  //   return this.eventsService.relayLaunch(body);
+  // }
 
   @Get('/')
   async findAll(@Query() options: SearchOption) {

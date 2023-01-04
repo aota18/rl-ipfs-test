@@ -115,6 +115,14 @@ BUILD_VERSION=$(./deployment/sh-lib/get-build-version.sh)
 yyyymm=$(date +'%Y%m')
 dd=$(date +'%d')
 RESULT_S3_URL="s3://we-dev-harry/app-pkgs/${yyyymm}/${dd}/backend-${BUILD_VERSION}.deb"
+
+
+# Config for Deploy to EC2 instance 
+KEYFILE_PATH="~/.ssh/redletter-key.pem"
+DEBFILE_PATH="/Users/sangwonseo/Dev/red-letter/redletter-mono/.tmp-no-git-working/build/tmp/dist-backend/redletter-final.deb"
+EC2_USER="ubuntu"
+EC2_IP="54.149.255.174"
+EC2_TARGET_PATH="/home/ubuntu/app-dir"
 printf "\n [-] target s3 url [s3 cp ${DEB_FILE_NAME} ${RESULT_S3_URL}] \n\n"
 # aws s3 cp "${DEB_FILE_NAME}" "${RESULT_S3_URL}"
 
@@ -124,4 +132,8 @@ mkdir -p artifacts/
 cp -f "${DEB_FILE_NAME}" artifacts/
 
 printf "\n [-] [How to Deploy? Copy deb file in cloud server]: [ aws s3 cp ${RESULT_S3_URL} ./ ] \n\n"
+
+
+printf "\n [-] [How to send? Send deb file to EC2 instance] : [[Send deb file to server]
+scp -i ${KEYFILE_PATH} ${DEBFILE_PATH} ${EC2_USER}@${EC2_IP}:${EC2_TARGET_PATH}] \n\n "
 echo "aws s3 cp ${RESULT_S3_URL} ./" > artifacts/link.txt

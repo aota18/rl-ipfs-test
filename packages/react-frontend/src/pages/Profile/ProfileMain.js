@@ -1,37 +1,37 @@
-import { Button } from "@windmill/react-ui";
-import Cookies from "js-cookie";
-import moment from "moment";
-import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import HeaderNavigator from "../../components/header-navigator/HeaderNavigator";
-import ImageViewModal from "../../components/modal/ImageViewModal";
-import SBTModal from "../../components/modal/SBTModal";
-import NotFound from "../../components/NotFound";
-import ProfileImgUploader from "../../components/profile-img-uploader/ProfileImgUploader";
-import Tab from "../../components/tab/Tab";
-import { AdminContext } from "../../context/AdminContext";
-import { SidebarContext } from "../../context/SidebarContext";
-import useAsync from "../../hooks/useAsync";
-import useToggleDrawer from "../../hooks/useToggleDrawer";
-import GreetingServices from "../../services/GreetingServices";
-import { truncateString } from "../../utils/string";
+import { Button } from '@windmill/react-ui';
+import Cookies from 'js-cookie';
+import moment from 'moment';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import HeaderNavigator from '../../components/header-navigator/HeaderNavigator';
+import ImageViewModal from '../../components/modal/ImageViewModal';
+import SBTModal from '../../components/modal/SBTModal';
+import NotFound from '../../components/NotFound';
+import ProfileImgUploader from '../../components/profile-img-uploader/ProfileImgUploader';
+import Tab from '../../components/tab/Tab';
+import { AdminContext } from '../../context/AdminContext';
+import { SidebarContext } from '../../context/SidebarContext';
+import useAsync from '../../hooks/useAsync';
+import useToggleDrawer from '../../hooks/useToggleDrawer';
+import GreetingServices from '../../services/GreetingServices';
+import { truncateString } from '../../utils/string';
 
 const commentItems = [
   {
     commentDt: moment(),
-    eventName: "Open Data Science Conference",
+    eventName: 'Open Data Science Conference',
     commentText: "Can't wait",
   },
   {
     commentDt: moment(),
-    eventName: "Open Data Science Conference",
+    eventName: 'Open Data Science Conference',
     commentText: "Can't wait",
   },
 ];
 
 const tabs = [
-  { id: 0, name: "My Gallery", href: "#" },
-  { id: 1, name: "My Redletters", href: "#" },
+  { id: 0, name: 'My Gallery', href: '#' },
+  { id: 1, name: 'My Redletters', href: '#' },
 ];
 
 const ProfileMain = () => {
@@ -54,13 +54,13 @@ const ProfileMain = () => {
 
   const onClickSBT = (sbt) => {
     setSelectedSBT(sbt);
-    handleModalOpen("sbt");
+    handleModalOpen('sbt');
   };
 
   const [currentTab, setCurrentTab] = useState(tabs[0]);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(100);
 
   const { data, loading } = useAsync(() => {
     if (currentTab.id === 1) {
@@ -83,11 +83,11 @@ const ProfileMain = () => {
 
   const onClickImage = (url) => {
     setSelectedImg(url);
-    handleModalOpen("imageView");
+    handleModalOpen('imageView');
   };
 
   const onPressMenu = () => {
-    navigate("/profile/update");
+    navigate('/profile/update');
   };
 
   return (
@@ -102,7 +102,7 @@ const ProfileMain = () => {
           <div className="flex flex-col justify-center">
             <h2 className="font-bold text-xl">
               {user.isGuest ? (
-                "Guest"
+                'Guest'
               ) : (
                 <>
                   {user.firstName} {user.lastName}
@@ -112,6 +112,10 @@ const ProfileMain = () => {
             <span>{truncateString(user.address, 20)}</span>
           </div>
         </div>
+
+        {/* <Link to="/ens-subdomain">
+          <Button className="mt-4 h-10 w-24">Register Domain</Button>
+        </Link> */}
 
         {user?.isGuest ? (
           <div className="flex flex-col justify-center items-center space-y-4">
@@ -134,7 +138,7 @@ const ProfileMain = () => {
               <div className="grid grid-cols-6 gap-4">
                 {!loading && data?.items.length === 0 ? (
                   <div className="col-span-6">
-                    <NotFound title={"Cards"} />
+                    <NotFound title={'Cards'} />
                   </div>
                 ) : (
                   data?.items?.map((item, id) => (

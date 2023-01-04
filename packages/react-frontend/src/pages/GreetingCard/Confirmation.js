@@ -1,15 +1,6 @@
 import { Button } from '@windmill/react-ui';
-import { useStateMachine } from 'little-state-machine';
 import React, { useRef, useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { FaLocationArrow } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import InputArea from '../../components/form/InputArea';
-import LabelArea from '../../components/form/LabelArea';
-import HeaderNavigator from '../../components/header-navigator/HeaderNavigator';
-import useEnsResolver from '../../hooks/useEnsResolver';
 import useQuery from '../../hooks/useQuery';
-import { truncateString } from '../../utils/string';
 import { notifySuccess } from '../../utils/toast';
 import { useNetwork } from 'wagmi';
 import blockchain from '../../data/data.json';
@@ -36,8 +27,9 @@ const Confirmation = () => {
 
   const generateCardMessage = async (templateId, blockId, from) => {
     if (!chain) return;
-    const checkURL =
-      chain.blockExplorers.default.url + '/tx/' + query.get('tx');
+    // const checkURL =
+    //   chain.blockExplorers.default.url + '/tx/' + query.get('tx');
+    const shortUrl = query.get('shortURL');
 
     const companyWebsite = `https://${window.location.hostname}`;
 
@@ -46,12 +38,26 @@ const Confirmation = () => {
     if (templateId === 0) {
       setCardMessage(
         <div>
-          Merry Christmas from the Ethereum Block {blockId}! Check out my
-          festival @Redlettereth greeting card at{' '}
-          <a href={checkURL} className="underline text-blue-500">
+          Greetings from the Ethereum Block {blockId}! Check out my festival
+          @Redlettereth greeting card at{' '}
+          <a href={shortUrl} className="underline text-blue-500">
             here
           </a>
           .
+          <br />
+          <br />
+          Blockchain Record:{' '}
+          <a
+            className="underline text-blue-500"
+            href={
+              chain.network === 'goerli'
+                ? `${blockchain.explorer.goerli}/tx/${query.get('tx')}`
+                : `${blockchain.explorer.ethereum}/tx/${query.get('tx')}`
+            }
+          >
+            Link
+          </a>
+          <br />
           <br />
           <br />
           For more information, check Redletter's official website{' '}
@@ -62,21 +68,34 @@ const Confirmation = () => {
       );
 
       setCopyValue(
-        `
-        Merry Christmas from the Ethereum Block ${blockId}! Check out my
-        festival @Redlettereth greeting card at ${checkURL}.
-   
-        For more information, check Redletter's official website ${companyWebsite}
-      `,
+        `Greetings from the Ethereum Block ${blockId}! Check out my festival @Redlettereth greeting card at ${shortUrl}.\n\nBlockchain Record: ${
+          chain.network === 'goerli'
+            ? `${blockchain.explorer.goerli}/tx/${query.get('tx')}`
+            : `${blockchain.explorer.ethereum}/tx/${query.get('tx')}`
+        }\n\nFor more information, check Redletter's official website ${companyWebsite}`,
       );
     } else {
       setCardMessage(
         <div>
-          Happy Holidays and warm wishes for the New Year from the Ethereum
-          Block {blockId}! Check out my festival @Redlettereth greeting card at{' '}
-          <a href={checkURL} className="underline text-blue-500">
+          Greetings from the Ethereum Block {blockId}! Check out my festival
+          @Redlettereth greeting card at{' '}
+          <a href={shortUrl} className="underline text-blue-500">
             here
           </a>
+          <br />
+          <br />
+          Blockchain Record :{' '}
+          <a
+            className="underline text-blue-500"
+            href={
+              chain.network === 'goerli'
+                ? `${blockchain.explorer.goerli}/tx/${query.get('tx')}`
+                : `${blockchain.explorer.ethereum}/tx/${query.get('tx')}`
+            }
+          >
+            Link
+          </a>
+          <br />
           <br />
           <br />
           For more information, check Redletter's official website{' '}
@@ -87,12 +106,11 @@ const Confirmation = () => {
       );
 
       setCopyValue(
-        `
-        Happy Holidays and warm wishes for the New Year from the Ethereum Block ${blockId}! Check out my
-        festival @Redlettereth greeting card at ${imageURL}.
-   
-        For more information, check Redletter's official website ${companyWebsite}
-      `,
+        `Greetings from the Ethereum Block ${blockId}! Check out my festival @Redlettereth greeting card at ${shortUrl}.\n\nBlockchain Record: ${
+          chain.network === 'goerli'
+            ? `${blockchain.explorer.goerli}/tx/${query.get('tx')}`
+            : `${blockchain.explorer.mainnet}/tx/${query.get('tx')}`
+        }\n\nFor more information, check Redletter's official website ${companyWebsite}`,
       );
     }
   };
