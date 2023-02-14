@@ -1,23 +1,23 @@
-import { Button } from "@windmill/react-ui";
-import React, { useContext, useEffect, useState } from "react";
-import { BsChevronRight } from "react-icons/bs";
-import { AiTwotoneCalendar } from "react-icons/ai";
-import { TiLocation } from "react-icons/ti";
-import TicketHolders from "./EventDetail/TicketHolders";
-import TicketBooth from "../contracts/TicketBoot.json";
-import { ethers } from "ethers";
-import Moralis from "moralis";
+import { Button } from '@windmill/react-ui';
+import React, { useContext, useEffect, useState } from 'react';
+import { BsChevronRight } from 'react-icons/bs';
+import { AiTwotoneCalendar, AiOutlineScan } from 'react-icons/ai';
+import { TiLocation } from 'react-icons/ti';
+import TicketHolders from './EventDetail/TicketHolders';
+import TicketBooth from '../contracts/TicketBoot.json';
+import { ethers } from 'ethers';
+import Moralis from 'moralis';
 import {
   BrowserRouter as Router,
   Link,
   Route,
   Routes,
   useNavigate,
-} from "react-router-dom";
-import Attended from "./EventDetail/Attended";
-import AllowBlock from "./EventDetail/AllowBlock";
-import useQuery from "../hooks/useQuery";
-import HeaderNavigator from "../components/header-navigator/HeaderNavigator";
+} from 'react-router-dom';
+import Attended from './EventDetail/Attended';
+import AllowBlock from './EventDetail/AllowBlock';
+import useQuery from '../hooks/useQuery';
+import HeaderNavigator from '../components/header-navigator/HeaderNavigator';
 
 /* 
 Host
@@ -25,23 +25,27 @@ Host
 - Can see all attendees
 */
 
-import { generateMockEvents, mock } from "../utils/mock";
-import Banner from "../components/banner/banner";
-import ShareModal from "../components/modal/ShareModal";
-import moment from "moment";
-import { notifyError, notifySuccess } from "../utils/toast";
-import EventServices from "../services/EventServices";
-import Loading from "../components/Loading";
-import { AdminContext } from "../context/AdminContext";
-import TicketServices from "../services/TicketServices";
+import { generateMockEvents, mock } from '../utils/mock';
+import Banner from '../components/banner/banner';
+import ShareModal from '../components/modal/ShareModal';
+import moment from 'moment';
+import { notifyError, notifySuccess } from '../utils/toast';
+import EventServices from '../services/EventServices';
+import Loading from '../components/Loading';
+import { AdminContext } from '../context/AdminContext';
+import TicketServices from '../services/TicketServices';
+import { REACT_APP_MORALIS_API_KEY } from '../utils/env';
+import QRScanModal from '../components/modal/QRScanModal';
+import useToggleDrawer from '../hooks/useToggleDrawer';
+
 const EventDetailMain = (props) => {
   const { state } = useContext(AdminContext);
+  const { handleModalOpen } = useToggleDrawer();
   const { user } = state;
 
   const [loading, setLoading] = useState(false);
   const [mintTxnLoading, setMintTxnLoading] = useState(false);
   const [event, setEvent] = useState(generateMockEvents(1)[0]);
-  const [isHost, setIsHost] = useState(false);
 
   const navigate = useNavigate();
 
@@ -73,7 +77,7 @@ const EventDetailMain = (props) => {
       const contract = new ethers.Contract(
         contractAddress,
         TicketBooth.abi,
-        signer
+        signer,
       );
 
       const mintTxn = await contract.mint(tokenURI, {
@@ -95,7 +99,7 @@ const EventDetailMain = (props) => {
     ticketName,
     description,
     eventId,
-    ticketImgURL
+    ticketImgURL,
   ) => {
     const objToEncode = {
       name: `${ticketName} #${totalTickets - ticketsLeft + 1}`,
@@ -106,7 +110,7 @@ const EventDetailMain = (props) => {
     const encodedURI = btoa(JSON.stringify(objToEncode));
 
     await Moralis.start({
-      apiKey: process.env.REACT_APP_MORALIS_API_KEY,
+      apiKey: REACT_APP_MORALIS_API_KEY,
     });
 
     const abi = [
@@ -131,23 +135,23 @@ const EventDetailMain = (props) => {
         event.ticketMeta.ticketName,
         event.description,
         event.id,
-        event.ticketMeta.imgUrl
+        event.ticketMeta.imgUrl,
       );
 
       const mintTicketTxn = await mintTicket(
         event.ticketMeta.contractAddress,
         event.ticketMeta.ticketPrice || 0,
-        tokenURI
+        tokenURI,
       );
 
       if (!mintTicketTxn) {
-        throw new Error("Cannot buy Ticket!");
+        throw new Error('Cannot buy Ticket!');
       }
 
       await TicketServices.createTicket(event.id);
 
       notifySuccess("You've got the Ticket!");
-      navigate("/");
+      navigate('/');
       setMintTxnLoading(false);
     } catch (err) {
       console.log(err);
@@ -156,17 +160,24 @@ const EventDetailMain = (props) => {
     }
   };
 
+  const handleScanTicket = () => {
+    handleModalOpen('qrScan');
+  };
+
   useEffect(() => {
-    getEventInfo(query.get("e"));
+    getEventInfo(query.get('e'));
   }, []);
 
   if (loading || !event) {
     return <Loading />;
   }
 
+  console.log(event);
+
   return (
     <>
       <ShareModal event={event} />
+      <QRScanModal />
       <div className="relative ">
         <HeaderNavigator back share onPicture={true} />
 
@@ -178,7 +189,7 @@ const EventDetailMain = (props) => {
           <img
             src={event.medias[0].url}
             className="rounded-lg z-10 object-cover"
-            style={{ width: "160px", height: "216px" }}
+            style={{ width: '160px', height: '216px' }}
             alt="event"
           />
           <div className="flex flex-col z-10 justify-between">
@@ -193,28 +204,28 @@ const EventDetailMain = (props) => {
               <div className="flex space-x-2 items-center mb-8">
                 <img
                   src={event.host?.profileURL || mock.eventData.host.profileImg}
-                  style={{ width: "32px", height: "32px" }}
+                  style={{ width: '32px', height: '32px' }}
                   className="rounded-full"
                   alt="profile"
                 />
                 <span className="text-sm text-white">
-                  {event.host.firstName || "Talyor"}{" "}
-                  {event.host.lastName || "Higgs"}
+                  {event.host.firstName || 'Talyor'}{' '}
+                  {event.host.lastName || 'Higgs'}
                 </span>
               </div>
             </div>
 
             <Button layout="primary" className="mt-4">
-              {" "}
+              {' '}
               {event.ticketMeta.ticketPrice
                 ? `${event.ticketMeta.ticketPrice} ETH  / ticket`
-                : "FREE"}
+                : 'FREE'}
             </Button>
           </div>
         </div>
 
         <div className="bg-white -translate-y-5 z-0 py-10 ">
-          {event.privacy === "PRIVATE" ? (
+          {event.privacy === 'PRIVATE' ? (
             <Banner type="danger" message="This is a private event" />
           ) : (
             <></>
@@ -225,14 +236,14 @@ const EventDetailMain = (props) => {
                 <div className="flex-col py-2 border-b">
                   <span className="text-sm text-gray-500">
                     {event.ticketMeta.ticketQuantity -
-                      event.ticketMeta.ticketsLeft}{" "}
+                      event.ticketMeta.ticketsLeft}{' '}
                     people
                   </span>
                   <div className="flex justify-between">
                     <span>See all ticket holders</span>
                     <Link
-                      id={query.get("e")}
-                      to={`/event/ticket-holders?e=${query.get("e")}`}
+                      id={query.get('e')}
+                      to={`/event/ticket-holders?e=${query.get('e')}`}
                     >
                       <BsChevronRight />
                     </Link>
@@ -246,8 +257,8 @@ const EventDetailMain = (props) => {
                   <div className="flex justify-between ">
                     <span>See all attendees</span>
                     <Link
-                      id={query.get("e")}
-                      to={`/event/attended?e=${query.get("e")}`}
+                      id={query.get('e')}
+                      to={`/event/attended?e=${query.get('e')}`}
                     >
                       <BsChevronRight />
                     </Link>
@@ -267,11 +278,11 @@ const EventDetailMain = (props) => {
                   <span>
                     {moment
                       .unix(event.eventStartDt)
-                      .format("ddd, MMM DD, YYYY")}
+                      .format('ddd, MMM DD, YYYY')}
                   </span>
                   <span className="text-gray-500 text-sm">
-                    {moment.unix(event.eventStartDt).format("hh:mmA")} -{" "}
-                    {moment.unix(event.eventEndDt).format("hh:mmA")}
+                    {moment.unix(event.eventStartDt).format('hh:mmA')} -{' '}
+                    {moment.unix(event.eventEndDt).format('hh:mmA')}
                   </span>
                   <a href="#" className=" text-sm">
                     Add to calendar
@@ -310,7 +321,7 @@ const EventDetailMain = (props) => {
              * TODO: Google MAP
              */}
 
-            {!isHost ? (
+            {user.address !== event.host.walletAddr ? (
               <>
                 <div className="flex space-x-2">
                   <Button layout="outline" className="flex-none px-8">
@@ -321,15 +332,23 @@ const EventDetailMain = (props) => {
                     layout="primary"
                     className="grow"
                     disabled={
-                      user.address === event.host.walletAddr || mintTxnLoading
+                      user.address === event.host.walletAddr ||
+                      mintTxnLoading ||
+                      event.ticketMeta.ticketsLeft <= 0
                     }
                   >
-                    {mintTxnLoading ? "Wait..." : "Buy Ticket"}
+                    {mintTxnLoading ? 'Wait...' : 'Buy Ticket'}
                   </Button>
                 </div>
               </>
             ) : (
-              <></>
+              <Button
+                layout="primary"
+                className="flex w-full px-8 text-xl"
+                onClick={() => handleScanTicket()}
+              >
+                <AiOutlineScan className="mr-4 " /> Scan
+              </Button>
             )}
           </div>
         </div>

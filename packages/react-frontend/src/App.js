@@ -1,4 +1,4 @@
-import React, { lazy, useContext } from "react";
+import React, { lazy, useContext } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -6,25 +6,22 @@ import {
   Routes,
   useLocation,
   Outlet,
-} from "react-router-dom";
-import { ToastContainer } from "./utils/toast";
-import AccessibleNavigationAnnouncer from "./components/AccessibleNavigationAnnouncer";
-import { useStateMachine } from "little-state-machine";
-import { updateInvites } from "./actions/updateInvites";
-import { AdminContext } from "./context/AdminContext";
-import NotFound from "./pages/404";
-import routes from "./routes";
-import Main from "./layout/Main";
-import BottomNavigation from "./components/bottom-navigtation/BottomNavigation";
-import EventSelectModal from "./components/modal/EventSelectModal";
-import { SignUpProvider } from "./context/SignupContext";
-import PersonalInfo from "./pages/SignUp/PersonalInfo";
-import MintSBT from "./pages/SignUp/MintSBT";
-import EnsSubdomain from "./pages/SignUp/EnsSubdomain";
-import SetLocation from "./pages/SignUp/SetLocation";
-import NeedSignupModal from "./components/modal/NeedSignupModal";
-import Home from "./pages/Home";
-import WalletSelectModal from "./components/modal/WalletSelectModal";
+} from 'react-router-dom';
+import { ToastContainer } from './utils/toast';
+import AccessibleNavigationAnnouncer from './components/AccessibleNavigationAnnouncer';
+import NotFound from './pages/404';
+import routes from './routes';
+import Main from './layout/Main';
+import BottomNavigation from './components/bottom-navigtation/BottomNavigation';
+import EventSelectModal from './components/modal/EventSelectModal';
+import { SignUpProvider } from './context/SignupContext';
+import PersonalInfo from './pages/SignUp/PersonalInfo';
+import MintSBT from './pages/SignUp/MintSBT';
+import EnsSubdomain from './pages/SignUp/EnsSubdomain';
+import SetLocation from './pages/SignUp/SetLocation';
+import NeedSignupModal from './components/modal/NeedSignupModal';
+import Home from './pages/Home';
+import WalletSelectModal from './components/modal/WalletSelectModal';
 
 const App = () => {
   return (
@@ -40,7 +37,7 @@ const App = () => {
             <Route path="/" element={<PrivateRoute />}>
               {routes.map((route, i) => {
                 if (route.element) {
-                  if (route.path === "/create-event/*") {
+                  if (route.path === '/create-event/*') {
                     return (
                       <Route
                         key={i}
@@ -115,7 +112,7 @@ const PrivateRoute = ({ children }) => {
         <NeedSignupModal />
         {children}
         <Outlet />
-      </Main>{" "}
+      </Main>{' '}
       <BottomNavigation />
     </>
   );

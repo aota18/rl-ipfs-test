@@ -15,6 +15,7 @@ const EventSearch = lazy(() => import('../pages/EventSearch'));
 // const Setting = lazy(() => import("../pages/Setting"));
 const Page404 = lazy(() => import('../pages/404'));
 const ReadMore = lazy(() => import('../pages/ReadMore'));
+const Verified = lazy(() => import('../pages/Verified'));
 const Test = lazy(() => import('../pages/Test'));
 
 /*
@@ -81,6 +82,10 @@ const routes = [
   {
     path: '/test',
     element: <Test />,
+  },
+  {
+    path: '/verified',
+    element: <Verified />,
   },
   {
     path: '/404',

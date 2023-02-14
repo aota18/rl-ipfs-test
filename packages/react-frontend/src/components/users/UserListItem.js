@@ -1,22 +1,29 @@
-import { Button } from "@windmill/react-ui";
-import moment from "moment";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import TicketServices from "../../services/TicketServices";
-import { mock } from "../../utils/mock";
-import { notifyError, notifySuccess } from "../../utils/toast";
+import { Button } from '@windmill/react-ui';
+import moment from 'moment';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SbtServices from '../../services/SbtServices';
+import TicketServices from '../../services/TicketServices';
+import { mock } from '../../utils/mock';
+import { notifyError, notifySuccess } from '../../utils/toast';
 
-const UserListItem = ({ item, isAttended }) => {
+const UserListItem = ({ item, isAttended, eventId }) => {
   const [isVerified, setIsVerified] = useState(false);
-  const navigate = useNavigate();
 
   const verify = async () => {
     try {
       const result = await TicketServices.verify(item.id);
 
       if (result.status !== 200) {
-        throw new Error("Cannot verify ticket!");
+        throw new Error('Cannot verify ticket!');
       }
+      console.log(eventId);
+
+      console.log('check===', item.owner.id);
+      const sbtCreateResult = await SbtServices.createSbt({
+        ownerId: item.owner.id,
+        eventId,
+      });
 
       setIsVerified(true);
     } catch (err) {
@@ -24,6 +31,7 @@ const UserListItem = ({ item, isAttended }) => {
       notifyError(err.message);
     }
   };
+
   return (
     <div className="flex items-center space-x-4 ">
       <img
@@ -40,21 +48,21 @@ const UserListItem = ({ item, isAttended }) => {
           <span className="text-sm text-gray-400 ">
             {isAttended
               ? `Timestamp: ${moment(item.createdAt).format(
-                  "YYYY/MM/DD hh:mm"
+                  'YYYY/MM/DD hh:mm',
                 )}`
-              : "1 Ticket"}
+              : '1 Ticket'}
           </span>
         </div>
-        {isAttended && item.permission !== "APPROVED" && (
+        {isAttended && item.permission !== 'APPROVED' && (
           <Button
             disabled={isVerified}
             onClick={verify}
             layout="primary"
             style={{
-              backgroundColor: "#4CD964",
+              backgroundColor: '#4CD964',
             }}
           >
-            {isVerified ? "Verified" : "Verify"}
+            {isVerified ? 'Verified' : 'Verify'}
           </Button>
         )}
       </div>

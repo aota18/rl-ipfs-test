@@ -2,31 +2,29 @@ import { Button, Input } from '@windmill/react-ui';
 import { useStateMachine } from 'little-state-machine';
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
-import { useNavigate, useRouteMatch } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Error from '../../components/form/Error';
-import InputArea from '../../components/form/InputArea';
 import HeaderNavigator from '../../components/header-navigator/HeaderNavigator';
 import useEnsResolver from '../../hooks/useEnsResolver';
 import useQuery from '../../hooks/useQuery';
 import useSignupSubmit from '../../hooks/useSignupSubmit';
 import { updateSignupInfo } from './updateAction';
 import { ethers } from 'ethers';
-import { notifyError } from '../../utils/toast';
+import { notifyError, notifySuccess } from '../../utils/toast';
 
 const EnsSubdomain = () => {
+  const BASE_SUBDOMAIN = 'redletter.eth';
+
+  const [ensCreated, setEnsCreated] = useState(false);
+  const [ensCreateLoading, setEnsCreateLoading] = useState(false);
+
   const query = useQuery();
   const { actions, state } = useStateMachine({ updateSignupInfo });
 
-  const { register, handleSubmit, errors, loading, getValues, control } =
+  const { handleSubmit, errors, loading, getValues, setValue, control } =
     useSignupSubmit(state);
 
-  const {
-    getAddressfromENS,
-    createSubdomain,
-    registerAndWrap,
-    createSubdomain_NameWrapper,
-    wrapSubdomain,
-  } = useEnsResolver();
+  const { getAddressfromENS, wrapSubdomain } = useEnsResolver();
 
   const [resolved, setResolved] = useState(null);
 
@@ -34,17 +32,23 @@ const EnsSubdomain = () => {
 
   const onClickCreateBtnWrap = async () => {
     try {
+      setEnsCreateLoading(true);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const accounts = await provider.listAccounts();
       const to = accounts[0];
       const subdomain = getValues('ens');
-      const duration = 60 * 60 * 24 * 365;
 
-      const result = await wrapSubdomain(subdomain, to);
+      await wrapSubdomain(subdomain, to);
 
-      console.log(result);
+      // Disable Create Button
+      setEnsCreated(true);
+
+      setEnsCreateLoading(false);
+
+      notifySuccess('ENS Successfully Minted!');
     } catch (err) {
       notifyError(err);
+      setEnsCreateLoading(false);
     }
   };
 
@@ -55,7 +59,7 @@ const EnsSubdomain = () => {
 
   const onChangeEns = async (e, onChange) => {
     const value = e.target.value;
-    const fullDomain = value + '.danielseo.eth';
+    const fullDomain = value + '.redletter.eth';
     onChange(value);
 
     if (!value || value === '') {
@@ -67,23 +71,6 @@ const EnsSubdomain = () => {
       setResolved(true);
     } else {
       setResolved(false);
-    }
-  };
-
-  const onClickCreateBtn = async () => {
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const accounts = await provider.listAccounts();
-      const to = accounts[0];
-      const subdomain = getValues('ens');
-
-      console.log(to, subdomain);
-
-      const result = await createSubdomain(subdomain, to);
-
-      console.log(result);
-    } catch (err) {
-      notifyError(err);
     }
   };
 
@@ -136,15 +123,15 @@ const EnsSubdomain = () => {
           <div>
             <Button
               onClick={() => onClickCreateBtnWrap()}
-              disabled={loading}
+              disabled={ensCreated || ensCreateLoading}
               className="mt-4 h-12 w-full"
               block
             >
-              Create
+              {ensCreated ? 'Created' : ensCreateLoading ? 'Wait...' : 'Create'}
             </Button>
             <Button
               type="submit"
-              disabled={loading}
+              disabled={ensCreateLoading}
               className="mt-4 h-12 w-full"
               block
             >

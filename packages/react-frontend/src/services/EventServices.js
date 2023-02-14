@@ -1,12 +1,18 @@
-import requests from "./httpService";
+import { getQueryString } from '../utils/string';
+import requests from './httpService';
 
 const EventServices = {
   createEvent(body) {
-    return requests.post("/events", body);
+    return requests.post('/events', body);
   },
 
-  getAllEvents({ page, limit }) {
-    return requests.get(`/events?page=${page}&limit=${limit}`);
+  getAllEvents(options) {
+    let queryString = getQueryString(options);
+    return requests.get(`/events${queryString}`);
+  },
+
+  getMyEvents({ page, limit }) {
+    return requests.get(`/events/myevents?page=${page}&limit=${limit}`);
   },
 
   getSingleEvent(eventId) {

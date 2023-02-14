@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import { Link, Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
-import { createStore, useStateMachine } from "little-state-machine";
+import { createStore, useStateMachine } from 'little-state-machine';
 
-import EventDetails from "../components/create-event/EventDetails";
-import Memories from "../components/create-event/Memories";
-import SBTDetails from "../components/create-event/SBTDetails";
-import TicketNFTDetails from "../components/create-event/TicketNFTDetails";
-import Preview from "../components/create-event/Preview";
-import { clearEvents } from "../components/create-event/updateAction";
+import EventDetails from '../components/create-event/EventDetails';
+import Memories from '../components/create-event/Memories';
+import SBTDetails from '../components/create-event/SBTDetails';
+import TicketNFTDetails from '../components/create-event/TicketNFTDetails';
+import Preview from '../components/create-event/Preview';
+import { clearEvents } from '../components/create-event/updateAction';
 /**
  * STEP 1: Event Details
  * STEP 2: Create Ticket NFT
@@ -22,31 +22,31 @@ import { clearEvents } from "../components/create-event/updateAction";
 // Event Type : Personal | Marriage | Graduation | Promotion |  Event | Get-Together
 
 export const mockEventObject = {
-  airdropDate: "2022-10-11T07:00:00.000Z",
+  airdropDate: '2022-10-11T07:00:00.000Z',
   airdropTime: 32400,
-  canBeResold: "no",
-  description: "Mock Description",
-  eventAddress1: "Addr1",
-  eventAddress2: "Addr2",
-  eventEndDate: "2022-10-05T07:00:00.000Z",
+  canBeResold: 'no',
+  description: 'Mock Description',
+  eventAddress1: 'Addr1',
+  eventAddress2: 'Addr2',
+  eventEndDate: '2022-10-05T07:00:00.000Z',
   eventEndTime: 32400,
-  eventStartDate: "2022-10-05T07:00:00.000Z",
+  eventStartDate: '2022-10-05T07:00:00.000Z',
   eventStartTime: 28800,
-  eventTitle: "Mock Event",
-  eventType: "personal",
-  memoriesImgFiles: [new File([""], "filename", { type: "image/png" })],
-  onOffline: "online",
-  privacy: "public",
-  recurrance: "NEVER",
-  salesEndDate: "2022-10-06T07:00:00.000Z",
+  eventTitle: 'Mock Event',
+  eventType: 'personal',
+  memoriesImgFiles: [new File([''], 'filename', { type: 'image/png' })],
+  onOffline: 'online',
+  privacy: 'public',
+  recurrance: 'NEVER',
+  salesEndDate: '2022-10-06T07:00:00.000Z',
   salesEndTime: 43200,
-  salesStartDate: "2022-10-06T07:00:00.000Z",
+  salesStartDate: '2022-10-06T07:00:00.000Z',
   salesStartTime: 32400,
-  sbtImgFile: [new File([""], "filename", { type: "image/png" })],
-  sbtName: "Mock SBT",
-  ticketImgFile: [new File([""], "filename", { type: "image/png" })],
-  ticketName: "Mock Ticket",
-  ticketType: "FREE",
+  sbtImgFile: [new File([''], 'filename', { type: 'image/png' })],
+  sbtName: 'Mock SBT',
+  ticketImgFile: [new File([''], 'filename', { type: 'image/png' })],
+  ticketName: 'Mock Ticket',
+  ticketType: 'FREE',
 };
 // Init Event Info
 createStore({});
@@ -55,44 +55,24 @@ const CreateEvent = () => {
   const { actions } = useStateMachine({ clearEvents });
 
   useEffect(() => {
-    window.addEventListener("beforeunload", alertUser);
+    window.addEventListener('beforeunload', alertUser);
     return () => {
       actions.clearEvents();
-      window.removeEventListener("beforeunload", alertUser);
+      window.removeEventListener('beforeunload', alertUser);
     };
   }, []);
 
   const alertUser = (e) => {
     e.preventDefault();
-    e.returnValue = "";
+    e.returnValue = '';
     alert(
-      "Are you sure you want to leave this page? Your data will not be saved."
+      'Are you sure you want to leave this page? Your data will not be saved.',
     );
   };
 
   return (
     <>
       <Routes>
-        {/* <nav>
-          <ul className="flex space-x-2">
-            <li>
-              <Link to={`?step=1`}>Event</Link>
-            </li>
-            <li>
-              <Link to={`/memories?step=2`}>Memory</Link>
-            </li>
-            <li>
-              <Link to={`/ticket-nft-details?step=3`}>NFT</Link>
-            </li>
-            <li>
-              <Link to={`/sbt-details?step=4`}>SBT</Link>
-            </li>
-
-            <li>
-              <Link to={`/preview?step=5`}>Preview</Link>
-            </li>
-          </ul>
-        </nav> */}
         <Route exact path={`/`} element={<EventDetails />} />
         <Route path={`/memories`} element={<Memories />} />
         <Route path={`/sbt-details`} element={<SBTDetails />} />

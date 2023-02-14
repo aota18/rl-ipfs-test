@@ -1,0 +1,22 @@
+{
+  "1": {
+    "name": "ethereum",
+    "explorer": "https://etherscan.io",
+    "rpc": "https://eth.llamarpc.com"
+  },
+  "5": {
+    "name": "goerli",
+    "explorer": "https://goerli.etherscan.io",
+    "rpc": "https://rpc.ankr.com/eth_goerli"
+  },
+  "137": {
+    "name": "polygon",
+    "explorer": "https://polygonscan.com",
+    "rpc": "https://polygon-rpc.com"
+  },
+  "80001": {
+    "name": "mumbai",
+    "explorer": "https://mumbai.polygonscan.com",
+    "rpc": "https://rpc.ankr.com/polygon_mumbai"
+  }
+}

@@ -19,9 +19,14 @@ import {
 } from '../../actions/updateCardDetails';
 import blockchain from '../../data/data.json';
 import { useNetwork } from 'wagmi';
+import useGreeting from '../../hooks/useGreeting';
+import contractsData from '../../data/contracts.json';
+import chainData from '../../data/chain.json';
 
 const Preview = () => {
   const { chain } = useNetwork();
+
+  console.log(chain);
 
   const {
     state: { user },
@@ -61,22 +66,29 @@ const Preview = () => {
     actions.clearCardDetails();
   };
 
+  const onSubmitFreeMint = async () => {
+    const result = await mintFreeGreetingCard();
+
+    navigate(
+      `/greeting-card/confirmation?step=3&tx=${result.transactionId}&block=${result.blockNumber}&imgUrl=${result.imgUrl}&cardId=${state.cardInfo.selectedCard.id}&recipient=${state.cardInfo.recipientAddress}&shortURL=${result.shortUrl}`,
+      {
+        replace: true,
+      },
+    );
+
+    actions.clearCardDetails();
+  };
+
   const { getContract } = useContract();
   const { getTokenURI } = useTokenURI();
+  const { createFreeGreeting } = useGreeting();
 
   const mintFreeGreetingCard = async () => {
-    let contractAddress = blockchain.contracts.greetingCard.mumbai;
-
-    if (!chain || chain.network !== 'mumbai') {
+    if (!chain) {
       notifyError('Check your network! ');
     } else {
       try {
-      } catch (err) {
         setLoading(true);
-        const contract = await getContract(contractAddress, GREETING_CARD.abi);
-        if (!contract) {
-          throw new Error('Ooops! contract was not imported!');
-        }
 
         const image = await getImage(state.cardInfo, user.address);
 
@@ -96,13 +108,10 @@ const Preview = () => {
         if (!tokenURI) {
           throw new Error('Cannot get Token URI!');
         }
-
-        const mintTxn = await contract.safeMint(
+        const receipt = await createFreeGreeting(
           state.cardInfo.recipientAddress,
           tokenURI,
         );
-
-        const receipt = await mintTxn.wait();
 
         const transactionId = receipt.transactionHash;
         const blockNumber = receipt.blockNumber;
@@ -113,6 +122,7 @@ const Preview = () => {
           description: state.cardInfo.description,
           transactionId,
           imgUrl: image.toURL(),
+          chainId: chain.id,
         });
 
         if (result.status !== 200) {
@@ -126,6 +136,8 @@ const Preview = () => {
         result.data.blockNumber = blockNumber;
 
         return result.data;
+      } catch (err) {
+        console.log(err);
       }
     }
   };
@@ -136,11 +148,7 @@ const Preview = () => {
     if (!chain) {
       notifyError('Check your network!');
     } else {
-      if (chain.network === 'goerli') {
-        contractAddress = blockchain.contracts.greetingCard.goerli;
-      } else {
-        contractAddress = blockchain.contracts.greetingCard.ethereum;
-      }
+      contractAddress = contractsData.greetingCard[chain.id];
 
       try {
         setLoading(true);
@@ -184,6 +192,7 @@ const Preview = () => {
           description: state.cardInfo.description,
           transactionId,
           imgUrl: image.toURL(),
+          chainId: chain.id,
         });
 
         if (result.status !== 200) {
@@ -203,6 +212,14 @@ const Preview = () => {
         return;
       }
     }
+  };
+
+  const isPolygon = (chainId) => {
+    return chainId === 137 || chainId === 80001;
+  };
+
+  const isEthereum = (chainId) => {
+    return chainId === 1 || chainId === 5;
   };
 
   useEffect(async () => {
@@ -255,24 +272,36 @@ const Preview = () => {
           <div className="truncate">{state.cardInfo.recipientAddress}</div>
         </div>
 
-        {/* <Button
-          type="button"
-          layout="primary"
-          className="w-full"
-          onClick={() => mintFreeGreetingCard()}
-          disabled={loading}
-        >
-          {loading ? 'Wait...' : 'Confirm (Free Minting)'}
-        </Button> */}
+        {chain && (
+          <Button
+            type="submit"
+            layout="primary"
+            className="w-full"
+            disabled={isPolygon(chain.id) ? true : loading}
+          >
+            {isPolygon(chain.id)
+              ? `Mint (Ethereum Only)`
+              : loading
+              ? 'Wait...'
+              : 'Mint'}
+          </Button>
+        )}
 
-        <Button
-          type="submit"
-          layout="primary"
-          className="w-full"
-          disabled={loading}
-        >
-          {loading ? 'Wait...' : 'Confirm'}
-        </Button>
+        {chain && (
+          <Button
+            type="button"
+            layout="primary"
+            className="w-full"
+            onClick={() => onSubmitFreeMint()}
+            disabled={isEthereum(chain.id) ? true : loading}
+          >
+            {isEthereum(chain.id)
+              ? `Free Mint (Polygon Only)`
+              : loading
+              ? 'Wait...'
+              : 'Free Mint'}
+          </Button>
+        )}
       </form>
     </div>
   );

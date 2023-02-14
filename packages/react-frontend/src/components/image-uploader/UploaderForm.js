@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { BsFillCameraFill, BsX } from "react-icons/bs";
-import { notifyError } from "../../utils/toast";
+import React, { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { BsFillCameraFill, BsX } from 'react-icons/bs';
+import { notifyError } from '../../utils/toast';
 
 /* *
  * style : sbt | profile | memory
@@ -13,7 +13,7 @@ const UploaderForm = ({ maxNum, onChange, value, defaultValues }) => {
 
   // 500KB
   const { getRootProps, getInputProps } = useDropzone({
-    accept: "image/*",
+    accept: 'image/*',
     multiple: false,
     maxSize: 500_000,
 
@@ -34,8 +34,11 @@ const UploaderForm = ({ maxNum, onChange, value, defaultValues }) => {
   const thumbs = files.map((file, idx) => {
     /* Recreate Object URL for files */
 
+    console.log(file);
+    const newObject = { ...file };
+
     if (file) {
-      Object.assign(file, { preview: URL.createObjectURL(file) });
+      Object.assign(newObject, { preview: URL.createObjectURL(file) });
     }
 
     return (
@@ -43,8 +46,8 @@ const UploaderForm = ({ maxNum, onChange, value, defaultValues }) => {
         <div className="w-20 h-20 border-2  border-gray-300 dark:border-gray-600 border-dashed rounded-md cursor-pointer relative">
           <input {...getInputProps()} hidden />
           <img
-            src={file.preview}
-            alt={file.name}
+            src={newObject.preview}
+            alt={newObject.name}
             className="w-20 h-20 object-cover rounded-md "
           />
           <div
@@ -57,14 +60,6 @@ const UploaderForm = ({ maxNum, onChange, value, defaultValues }) => {
       </div>
     );
   });
-
-  // useEffect(
-  //   () => () => {
-  //     // Make sure to revoke the data uris to avoid memory leaks
-  //     files.forEach((file) => URL.revokeObjectURL(file.preview));
-  //   },
-  //   [files]
-  // );
 
   return (
     <div className="w-full text-center">

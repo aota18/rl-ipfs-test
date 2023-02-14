@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import useToggleDrawer from "../../hooks/useToggleDrawer";
-import EnterEventModal from "../modal/EnterEventModal";
-import NotFound from "../NotFound";
-import InvitedEventListItem from "./InvitedListItem";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import useToggleDrawer from '../../hooks/useToggleDrawer';
+import EnterEventModal from '../modal/EnterEventModal';
+import NotFound from '../NotFound';
+import InvitedEventListItem from './InvitedListItem';
 
 const InvitedEventList = ({ items }) => {
+  console.log(items);
   const [submitInfo, setSubmitInfo] = useState({});
 
   const { handleModalOpen } = useToggleDrawer();
 
   const onClickListItem = (id, eventId) => {
-    handleModalOpen("enterEvent");
+    handleModalOpen('enterEvent');
     setSubmitInfo({
       id,
       eventId,
@@ -33,7 +34,7 @@ const InvitedEventList = ({ items }) => {
             </div>
           ))
         ) : (
-          <NotFound title={"Events"} />
+          <NotFound title={'Events'} />
         )}
       </div>
     </>

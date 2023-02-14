@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import HeaderNavigator from "../../components/header-navigator/HeaderNavigator";
-import Loading from "../../components/Loading";
-import NotFound from "../../components/NotFound";
-import PageTitle from "../../components/page-title/PageTitle";
-import Tab from "../../components/tab/Tab";
-import UserList from "../../components/users/UserList";
-import useAsync from "../../hooks/useAsync";
-import useQuery from "../../hooks/useQuery";
-import TicketServices from "../../services/TicketServices";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import HeaderNavigator from '../../components/header-navigator/HeaderNavigator';
+import Loading from '../../components/Loading';
+import NotFound from '../../components/NotFound';
+import PageTitle from '../../components/page-title/PageTitle';
+import Tab from '../../components/tab/Tab';
+import UserList from '../../components/users/UserList';
+import useQuery from '../../hooks/useQuery';
+import TicketServices from '../../services/TicketServices';
 
 const tabs = [
-  { id: 0, name: "Not verified", value: "REQUESTED", href: "#" },
-  { id: 1, name: "Verified", value: "APPROVED", href: "#" },
+  { id: 0, name: 'Not verified', value: 'REQUESTED', href: '#' },
+  { id: 1, name: 'Verified', value: 'APPROVED', href: '#' },
 ];
 
 const Attended = () => {
@@ -22,7 +21,7 @@ const Attended = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleChange = (tabs, id) => {
     setCurrentTab(tabs[id]);
@@ -31,14 +30,13 @@ const Attended = () => {
   useEffect(() => {
     let unmounted = false;
 
-    TicketServices.getTicketAttendees(query.get("e"), {
+    TicketServices.getTicketAttendees(query.get('e'), {
       status: currentTab.value,
     })
       .then((res) => {
-        console.log(res);
         if (!unmounted) {
           setData(res);
-          setError("");
+          setError('');
           setLoading(false);
         }
       })
@@ -64,9 +62,13 @@ const Attended = () => {
         {loading ? (
           <Loading />
         ) : !data.items.length ? (
-          <NotFound title={"Attendees"} />
+          <NotFound title={'Attendees'} />
         ) : (
-          <UserList items={data.items} isAttended={true} />
+          <UserList
+            items={data.items}
+            isAttended={true}
+            eventId={query.get('e')}
+          />
         )}
       </div>
     </div>

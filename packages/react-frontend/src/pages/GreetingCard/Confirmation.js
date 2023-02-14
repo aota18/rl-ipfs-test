@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import useQuery from '../../hooks/useQuery';
 import { notifySuccess } from '../../utils/toast';
 import { useNetwork } from 'wagmi';
-import blockchain from '../../data/data.json';
+import chainData from '../../data/chain.json';
 
 const Confirmation = () => {
   const { chain } = useNetwork();
@@ -27,13 +27,10 @@ const Confirmation = () => {
 
   const generateCardMessage = async (templateId, blockId, from) => {
     if (!chain) return;
-    // const checkURL =
-    //   chain.blockExplorers.default.url + '/tx/' + query.get('tx');
+
     const shortUrl = query.get('shortURL');
 
     const companyWebsite = `https://${window.location.hostname}`;
-
-    const imageURL = query.get('imgUrl');
 
     if (templateId === 0) {
       setCardMessage(
@@ -49,11 +46,7 @@ const Confirmation = () => {
           Blockchain Record:{' '}
           <a
             className="underline text-blue-500"
-            href={
-              chain.network === 'goerli'
-                ? `${blockchain.explorer.goerli}/tx/${query.get('tx')}`
-                : `${blockchain.explorer.ethereum}/tx/${query.get('tx')}`
-            }
+            href={`${chainData[chain.id].explorer}/tx/${query.get('tx')}`}
           >
             Link
           </a>
@@ -69,10 +62,10 @@ const Confirmation = () => {
 
       setCopyValue(
         `Greetings from the Ethereum Block ${blockId}! Check out my festival @Redlettereth greeting card at ${shortUrl}.\n\nBlockchain Record: ${
-          chain.network === 'goerli'
-            ? `${blockchain.explorer.goerli}/tx/${query.get('tx')}`
-            : `${blockchain.explorer.ethereum}/tx/${query.get('tx')}`
-        }\n\nFor more information, check Redletter's official website ${companyWebsite}`,
+          chainData[chain.id].explorer
+        }/tx/${query.get(
+          'tx',
+        )}\n\nFor more information, check Redletter's official website ${companyWebsite}`,
       );
     } else {
       setCardMessage(
@@ -87,11 +80,7 @@ const Confirmation = () => {
           Blockchain Record :{' '}
           <a
             className="underline text-blue-500"
-            href={
-              chain.network === 'goerli'
-                ? `${blockchain.explorer.goerli}/tx/${query.get('tx')}`
-                : `${blockchain.explorer.ethereum}/tx/${query.get('tx')}`
-            }
+            href={`${chainData[chain.id].explorer}/tx/${query.get('tx')}`}
           >
             Link
           </a>
@@ -107,10 +96,9 @@ const Confirmation = () => {
 
       setCopyValue(
         `Greetings from the Ethereum Block ${blockId}! Check out my festival @Redlettereth greeting card at ${shortUrl}.\n\nBlockchain Record: ${
-          chain.network === 'goerli'
-            ? `${blockchain.explorer.goerli}/tx/${query.get('tx')}`
-            : `${blockchain.explorer.mainnet}/tx/${query.get('tx')}`
-        }\n\nFor more information, check Redletter's official website ${companyWebsite}`,
+          chainData[chain.id].explorer
+        }/tx/${query.get('tx')}
+        \n\nFor more information, check Redletter's official website ${companyWebsite}`,
       );
     }
   };

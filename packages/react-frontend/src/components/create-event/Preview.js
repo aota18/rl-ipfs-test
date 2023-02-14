@@ -1,19 +1,19 @@
-import { useStateMachine } from "little-state-machine";
-import moment from "moment";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import useQuery from "../../hooks/useQuery";
-import HeaderNavigator from "../header-navigator/HeaderNavigator";
-import PageTitle from "../page-title/PageTitle";
-import { updateEvents, clearEvents } from "./updateAction.js";
-import { mock } from "../../utils/mock";
-import { truncateString } from "../../utils/string";
-import { AiFillEnvironment } from "react-icons/ai";
-import { Button } from "@windmill/react-ui";
-import { ContractFactory, ethers } from "ethers";
-import EventServices from "../../services/EventServices";
-import { notifyError, notifySuccess } from "../../utils/toast";
-import TicketBooth from "../../contracts/TicketBoot.json";
+import { useStateMachine } from 'little-state-machine';
+import moment from 'moment';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import useQuery from '../../hooks/useQuery';
+import HeaderNavigator from '../header-navigator/HeaderNavigator';
+import PageTitle from '../page-title/PageTitle';
+import { updateEvents, clearEvents } from './updateAction.js';
+import { mock } from '../../utils/mock';
+import { truncateString } from '../../utils/string';
+import { AiFillEnvironment } from 'react-icons/ai';
+import { Button } from '@windmill/react-ui';
+import { ContractFactory, ethers } from 'ethers';
+import EventServices from '../../services/EventServices';
+import { notifyError, notifySuccess } from '../../utils/toast';
+import TicketBooth from '../../contracts/TicketBoot.json';
 
 const makeEventObject = (obj) => {
   let eventObj = {};
@@ -41,19 +41,19 @@ const makeEventObject = (obj) => {
 
   /* Delete preview key*/
 
-  let eventImgFilesArr = deleteKeysFromObject(obj.eventImgFiles, "preview");
+  let eventImgFilesArr = deleteKeysFromObject(obj.eventImgFiles, 'preview');
   let memoriesImgFilesArr = deleteKeysFromObject(
     obj.memoriesImgFiles,
-    "preview"
+    'preview',
   );
-  let sbtImgFilesArr = deleteKeysFromObject(obj.sbtImgFiles, "preview");
-  let ticketImgFilesArr = deleteKeysFromObject(obj.ticketImgFiles, "preview");
+  let sbtImgFilesArr = deleteKeysFromObject(obj.sbtImgFiles, 'preview');
+  let ticketImgFilesArr = deleteKeysFromObject(obj.ticketImgFiles, 'preview');
 
-  if ("password" in obj) {
+  if ('password' in obj) {
     eventObj.password = obj.password;
   }
 
-  if ("price" in obj) {
+  if ('price' in obj) {
     eventObj.price = obj.price;
   }
 
@@ -65,12 +65,12 @@ const makeEventObject = (obj) => {
     formObj.append(key, eventObj[key]);
   });
 
-  eventImgFilesArr.forEach((file) => formObj.append("eventImgFiles", file));
+  eventImgFilesArr.forEach((file) => formObj.append('eventImgFiles', file));
   memoriesImgFilesArr.forEach((file) =>
-    formObj.append("memoriesImgFiles", file)
+    formObj.append('memoriesImgFiles', file),
   );
-  sbtImgFilesArr.forEach((file) => formObj.append("sbtImgFiles", file));
-  ticketImgFilesArr.forEach((file) => formObj.append("ticketImgFiles", file));
+  sbtImgFilesArr.forEach((file) => formObj.append('sbtImgFiles', file));
+  ticketImgFilesArr.forEach((file) => formObj.append('ticketImgFiles', file));
 
   return formObj;
 };
@@ -93,7 +93,7 @@ const Preview = () => {
   const navigate = useNavigate();
 
   const onPressBack = () => {
-    navigate("/create-event/sbt-details?step=4", { replace: true });
+    navigate('/create-event/sbt-details?step=4', { replace: true });
   };
 
   const onSubmit = async (data) => {
@@ -108,24 +108,24 @@ const Preview = () => {
          FREE - 0
       */
       const ticketPrice =
-        eventData.ticketType === "PAID"
-          ? parseFloat(eventCreateDto.get("ticketPrice")) * 10 ** 18
+        eventData.ticketType === 'PAID'
+          ? parseFloat(eventCreateDto.get('ticketPrice')) * 10 ** 18
           : 0;
       const ticketContractAddress = await deployTicketBooth(
-        eventCreateDto.get("ticketQuantity"),
-        ticketPrice
+        eventCreateDto.get('ticketQuantity'),
+        ticketPrice,
       );
       if (!ticketContractAddress)
-        throw new Error("Error with Deploying Contract Address");
-      eventCreateDto.append("ticketContractAddress", ticketContractAddress);
+        throw new Error('Error with Deploying Contract Address');
+      eventCreateDto.append('ticketContractAddress', ticketContractAddress);
 
       await EventServices.createEvent(eventCreateDto);
 
-      notifySuccess("Event Successfully created!");
+      notifySuccess('Event Successfully created!');
       /* Clear Event Form */
       actions.clearEvents();
       /* Move to */
-      navigate("/", { replace: true });
+      navigate('/', { replace: true });
     } catch (err) {
       console.error(err);
       notifyError(err.message);
@@ -145,7 +145,7 @@ const Preview = () => {
       const factory = new ContractFactory(
         TicketBooth.abi,
         TicketBooth.bytecode,
-        signer
+        signer,
       );
 
       const contract = await factory.deploy(numOfTickets, ticketPrice);
@@ -157,7 +157,8 @@ const Preview = () => {
   };
 
   const generatePreviewURL = (file) => {
-    return Object.assign(file, { preview: URL.createObjectURL(file) });
+    const newObject = { ...file };
+    return Object.assign(newObject, { preview: URL.createObjectURL(file) });
   };
 
   const renderEventImage = () => {
@@ -165,7 +166,7 @@ const Preview = () => {
 
     return (
       <img
-        style={{ width: "100px", height: "136px" }}
+        style={{ width: '100px', height: '136px' }}
         className="object-cover rounded-lg"
         src={file.preview}
         alt="event"
@@ -188,10 +189,10 @@ const Preview = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col space-y-6"
       >
-        <PageTitle text={"Preview"} />
+        <PageTitle text={'Preview'} />
 
         <div>
-          <img src={`/step5-${query.get("step")}.svg`} alt="step" />
+          <img src={`/step5-${query.get('step')}.svg`} alt="step" />
         </div>
 
         <span className=" text-gray-500 ">
@@ -209,7 +210,7 @@ const Preview = () => {
                 <span className="text-gray-500 text-sm font-thin ">
                   {moment
                     .unix(state.event?.eventStartDate)
-                    .format("ddd, MMM D")}
+                    .format('ddd, MMM D')}
                 </span>
                 <span className="">{state.event?.eventTitle}</span>
                 <span className="flex items-center text-gray-500 text-sm space-x-2 font-thin">
@@ -222,7 +223,7 @@ const Preview = () => {
                 <span>
                   {state.event?.ticketPrice
                     ? `${state.event?.ticketPrice} ETH`
-                    : "FREE"}
+                    : 'FREE'}
                 </span>
               </div>
             </div>
@@ -236,8 +237,8 @@ const Preview = () => {
             <div className="flex flex-col">
               <span className="">{state.event?.sbtName}</span>
               <span className="text-sm text-gray-500">
-                Airdrop on{" "}
-                {moment(state.event?.airdropDate).format("MMM DD, YYYY")}
+                Airdrop on{' '}
+                {moment(state.event?.airdropDate).format('MMM DD, YYYY')}
               </span>
             </div>
           </div>

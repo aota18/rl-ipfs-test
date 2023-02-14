@@ -1,11 +1,11 @@
-import React, { useContext, useState, useRef } from "react";
-import { Modal, ModalBody, Button, Input, Label } from "@windmill/react-ui";
+import React, { useContext, useState, useRef } from 'react';
+import { Modal, ModalBody, Button, Input, Label } from '@windmill/react-ui';
 
-import { SidebarContext } from "../../context/SidebarContext";
+import { SidebarContext } from '../../context/SidebarContext';
 
-import { useForm } from "react-hook-form";
-import moment from "moment";
-import { notifySuccess } from "../../utils/toast";
+import { useForm } from 'react-hook-form';
+import moment from 'moment';
+import { notifySuccess } from '../../utils/toast';
 
 const ShareModal = ({ event }) => {
   const ref = useRef(null);
@@ -17,7 +17,7 @@ const ShareModal = ({ event }) => {
   const { handleSubmit } = useForm();
 
   const submitHandler = () => {
-    console.log("code submit");
+    console.log('code submit');
     setIsSubmitted(true);
   };
 
@@ -32,23 +32,23 @@ const ShareModal = ({ event }) => {
 
     await navigator.clipboard.writeText(ref.current.value);
 
-    notifySuccess("Message Copied into Clipboard!");
+    notifySuccess('Message Copied into Clipboard!');
 
     // Close Modal
-    closeModal("share");
+    closeModal('share');
   };
 
   const generateCopyValue = () => {
-    let password = includeCode ? `Invite code: ${event.password}` : "";
+    let password = includeCode ? `Invite code: ${event.password}` : '';
 
     return (
       `You're Invited to ${event.title}!\nStarts: ${moment
         .unix(event.eventStartDt)
-        .format("YYYY/MM/DD hh:mm")}\nEnds: ${moment
+        .format('YYYY/MM/DD hh:mm')}\nEnds: ${moment
         .unix(event.eventEndDt)
-        .format("YYYY/MM/DD hh:mm")} \n\nEvent link: http://${
+        .format('YYYY/MM/DD hh:mm')} \n\nEvent link: http://${
         window.location.hostname
-      }${process.env.NODE_ENV === "development" && ":4001"}/event?e=${
+      }${process.env.NODE_ENV === 'development' && ':4001'}/event?e=${
         event.id
       }&type=${event.category}&from=${event.host.id}&i=t
     ` + password
@@ -57,7 +57,7 @@ const ShareModal = ({ event }) => {
 
   return (
     <>
-      <Modal isOpen={isModalOpen.share} onClose={() => closeModal("share")}>
+      <Modal isOpen={isModalOpen.share} onClose={() => closeModal('share')}>
         <form onSubmit={handleSubmit(submitHandler)}>
           <ModalBody className="text-center custom-modal px-2 pt-4 pb-4">
             <div className="flex flex-col items-center space-y-4">
@@ -66,16 +66,16 @@ const ShareModal = ({ event }) => {
               </h2>
 
               <div className="border p-4 rounded-md text-left">
-                You're Invited to ${event.title}! <br />
+                You're Invited to {event.title}! <br />
                 Starts:
                 {moment
                   .unix(event.eventStartDt)
-                  .format("YYYY/MM/DD hh:mm")}{" "}
+                  .format('YYYY/MM/DD hh:mm')}{' '}
                 <br />
                 Ends:
-                {moment.unix(event.eventEndDt).format("YYYY/MM/DD hh:mm")}{" "}
+                {moment.unix(event.eventEndDt).format('YYYY/MM/DD hh:mm')}{' '}
                 <br /> <br /> Event link: http://{window.location.hostname}
-                {process.env.NODE_ENV === "development" && ":4001"}/event?e=
+                {process.env.NODE_ENV === 'development' && ':4001'}/event?e=
                 {event.id}&type={event.category}&from={event.host.id}&i=t
                 <br />
                 <br />
@@ -90,18 +90,20 @@ const ShareModal = ({ event }) => {
                 hidden
               />
 
-              <Label radio className="grid grid-cols-8 gap-4">
-                <div className="col-span-4">
-                  <Input
-                    className="accent-secondary"
-                    type="checkbox"
-                    value={includeCode}
-                    checked={includeCode}
-                    onChange={(e) => handleIncludeCode(e.target.value)}
-                  />
-                  <span className="ml-2">Include invite code</span>
-                </div>
-              </Label>
+              {event.password && (
+                <Label radio className="grid grid-cols-8 gap-4">
+                  <div className="col-span-4">
+                    <Input
+                      className="accent-secondary"
+                      type="checkbox"
+                      value={includeCode}
+                      checked={includeCode}
+                      onChange={(e) => handleIncludeCode(e.target.value)}
+                    />
+                    <span className="ml-2">Include invite code</span>
+                  </div>
+                </Label>
+              )}
 
               <Button
                 className="w-full sm:w-auto hover:bg-white hover:border-gray-50"

@@ -1,5 +1,5 @@
-import { getQueryString } from "../utils/string";
-import requests from "./httpService";
+import { getQueryString } from '../utils/string';
+import requests from './httpService';
 
 const TicketServices = {
   getAllTickets(options) {
@@ -26,6 +26,10 @@ const TicketServices = {
 
   verify(ticketId) {
     return requests.patch(`/ticket/verify/${ticketId}`);
+  },
+
+  getTicketInfo(ticketId) {
+    return requests.get(`/ticket/${ticketId}`);
   },
 };
 

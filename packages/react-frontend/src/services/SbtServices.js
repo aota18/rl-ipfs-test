@@ -1,12 +1,16 @@
-import requests from "./httpService";
+import requests from './httpService';
 
 const SbtServices = {
   createSbt(body) {
-    return requests.post("/sbt", body);
+    return requests.post('/sbt', body);
   },
 
   getMySbts() {
-    return requests.get("/sbt?status=DROPPED");
+    return requests.get('/sbt');
+  },
+
+  mintSbt({ id, tokenId }) {
+    return requests.patch(`/sbt/mint/${id}`, { tokenId });
   },
 
   burnSbt({ id }) {

@@ -1,6 +1,6 @@
-import { Cloudinary, Transformation } from '@cloudinary/url-gen';
+import { Cloudinary } from '@cloudinary/url-gen';
 // Import required actions.
-import { fit, thumbnail } from '@cloudinary/url-gen/actions/resize';
+import { thumbnail } from '@cloudinary/url-gen/actions/resize';
 import { byRadius } from '@cloudinary/url-gen/actions/roundCorners';
 import { source } from '@cloudinary/url-gen/actions/overlay';
 
@@ -10,7 +10,6 @@ import { Position } from '@cloudinary/url-gen/qualifiers/position';
 import { text } from '@cloudinary/url-gen/qualifiers/source';
 import { TextStyle } from '@cloudinary/url-gen/qualifiers/textStyle';
 import useEnsResolver from './useEnsResolver';
-import { byAngle } from '@cloudinary/transformation-builder-sdk/actions/rotate';
 import { textWrap } from '../utils/string';
 
 const useImgGenerator = () => {

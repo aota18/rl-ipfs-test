@@ -1,13 +1,38 @@
-import React, { useState, createContext, useRef } from "react";
+import React, { useState, createContext, useRef } from 'react';
+import { serviceList } from '../data/serviceList';
+import TicketServices from '../services/TicketServices';
+import { notifySuccess } from '../utils/toast';
 
 // create context
 export const SidebarContext = createContext();
 
 export const SidebarProvider = ({ children }) => {
+  let interval;
+
+  const [qrInterval, setQRInterval] = useState();
+  const startQRInterval = (ticketId) => {
+    interval = setInterval(() => {
+      // Check if is scanned.
+      TicketServices.getTicketInfo(ticketId).then((data) => {
+        const ticketPermissionStatus = data.permission;
+
+        if (ticketPermissionStatus === 'APPROVED') {
+          notifySuccess('Ticket Successfully Verified!');
+          closeModal('ticket');
+          terminateQRInterval();
+          clearInterval(interval);
+        }
+      });
+    }, 1000);
+    setQRInterval(interval);
+  };
+
+  const terminateQRInterval = () => {
+    clearInterval(qrInterval);
+  };
   /* 
   Share Modal
   */
-
   const [isModalOpen, setIsModalOpen] = useState({
     action: false,
     share: false,
@@ -18,7 +43,10 @@ export const SidebarProvider = ({ children }) => {
     needSignup: false,
     sbt: false,
     imageView: false,
+    qrScan: false,
   });
+
+  const [service, setService] = useState(serviceList[0]);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -26,16 +54,16 @@ export const SidebarProvider = ({ children }) => {
   const resultsPerPage = 20;
   const [limitData, setLimitData] = useState(20);
   const [isBulkDrawerOpen, setIsBulkDrawerOpen] = useState(false);
-  const [lang, setLang] = useState("");
-  const [time, setTime] = useState("");
-  const [sortedField, setSortedField] = useState("");
+  const [lang, setLang] = useState('');
+  const [time, setTime] = useState('');
+  const [sortedField, setSortedField] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
-  const [zone, setZone] = useState("");
-  const [status, setStatus] = useState("");
-  const [source, setSource] = useState("");
+  const [zone, setZone] = useState('');
+  const [status, setStatus] = useState('');
+  const [source, setSource] = useState('');
   const [category, setCategory] = useState(null);
-  const searchRef = useRef("");
+  const searchRef = useRef('');
   const [tabToggle, setTabToggle] = useState(false);
 
   const closeSidebar = () => setIsSidebarOpen(false);
@@ -71,26 +99,6 @@ export const SidebarProvider = ({ children }) => {
     setCategory(null);
     setSearchText(searchRef.current.value);
   };
-
-  // const value = useMemo(
-  //   () => ({
-  //     isSidebarOpen,
-  //     toggleSidebar,
-  //     closeSidebar,
-  //     isDrawerOpen,
-  //     toggleDrawer,
-  //     closeDrawer,
-  //     setIsDrawerOpen,
-  //     isModalOpen,
-  //     toggleModal,
-  //     closeModal,
-  //     isUpdate,
-  //     setIsUpdate,
-  //   }),
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [isSidebarOpen, isDrawerOpen, isModalOpen, isUpdate]
-  // );
 
   return (
     <SidebarContext.Provider
@@ -136,6 +144,10 @@ export const SidebarProvider = ({ children }) => {
         setLimitData,
         tabToggle,
         toggleTab,
+        service,
+        setService,
+        startQRInterval,
+        terminateQRInterval,
       }}
     >
       {children}

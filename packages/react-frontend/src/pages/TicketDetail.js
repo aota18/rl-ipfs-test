@@ -1,15 +1,14 @@
-import { Button } from "@windmill/react-ui";
-import moment from "moment";
-import React from "react";
-import { AiTwotoneCalendar } from "react-icons/ai";
-import { TiLocation } from "react-icons/ti";
-import { useParams } from "react-router";
-import { useLocation } from "react-router";
-import HeaderNavigator from "../components/header-navigator/HeaderNavigator";
-import TicketModal from "../components/modal/TicketModal";
-import useQuery from "../hooks/useQuery";
-import useToggleDrawer from "../hooks/useToggleDrawer";
-import { mock } from "../utils/mock";
+import { Button } from '@windmill/react-ui';
+import moment from 'moment';
+import React, { useContext } from 'react';
+import { AiTwotoneCalendar } from 'react-icons/ai';
+import { TiLocation } from 'react-icons/ti';
+import { useLocation } from 'react-router';
+import HeaderNavigator from '../components/header-navigator/HeaderNavigator';
+import TicketModal from '../components/modal/TicketModal';
+import { SidebarContext } from '../context/SidebarContext';
+import useQuery from '../hooks/useQuery';
+import useToggleDrawer from '../hooks/useToggleDrawer';
 
 const TicketDetail = () => {
   const query = useQuery();
@@ -18,6 +17,15 @@ const TicketDetail = () => {
   } = useLocation();
 
   const { handleModalOpen } = useToggleDrawer();
+  const { isModalOpen, closeModal, startQRInterval } =
+    useContext(SidebarContext);
+  let interval;
+
+  const handleUseTicket = (ticketId) => {
+    handleModalOpen('ticket');
+    // Set Interval of
+    startQRInterval(ticketId);
+  };
 
   return (
     <div className="relative">
@@ -37,8 +45,8 @@ const TicketDetail = () => {
             <div className="w-2 h-2 rounded-full bg-success" />
 
             <span className="text-gray-500">
-              {item.status === "CREATED"
-                ? "Unused"
+              {item.status === 'CREATED'
+                ? 'Unused'
                 : item.status.charAt(0).toUpperCase() + item.status.slice(1)}
             </span>
           </div>
@@ -54,11 +62,11 @@ const TicketDetail = () => {
                 <span>
                   {moment
                     .unix(item.event.eventStartDt)
-                    .format("ddd, MMM DD, YYYY")}
+                    .format('ddd, MMM DD, YYYY')}
                 </span>
                 <span className="text-gray-500 text-sm">
-                  {moment.unix(item.event.eventStartDt).format("hh:mmA")} -{" "}
-                  {moment.unix(item.event.eventEndDt).format("hh:mmA")}
+                  {moment.unix(item.event.eventStartDt).format('hh:mmA')} -{' '}
+                  {moment.unix(item.event.eventEndDt).format('hh:mmA')}
                 </span>
                 <a href="#" className=" text-sm">
                   Add to calendar
@@ -92,10 +100,17 @@ const TicketDetail = () => {
             type="submit"
             className="mt-4 h-12 w-full"
             to="/dashboard"
-            disabled={item.permission === "REQUESTED"}
-            onClick={() => handleModalOpen("ticket")}
+            disabled={
+              item.permission === 'REQUESTED'
+              // || item.permission === 'APPROVED'
+            }
+            onClick={() => handleUseTicket(item.id)}
           >
-            {item.permission === "REQUESTED" ? "Requested" : "Use Ticket"}
+            {item.permission === 'APPROVED'
+              ? 'Used'
+              : item.permission === 'REQUESTED'
+              ? 'Requested'
+              : 'Use Ticket'}
           </Button>
         </div>
       </div>

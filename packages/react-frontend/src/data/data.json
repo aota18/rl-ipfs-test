@@ -1,19 +1,14 @@
 {
+  "wallets": {
+    "admin": {
+      "address": "0x4db036918f786DF29871D15379507DB60A01Aac3",
+      "privateKey": "4297dbaef46097b702c85450fed5a9e44bf99c1b4a99e446e37b9e34d3892bbf"
+    }
+  },
   "contracts": {
-    "greetingCard": {
-      "ethereum": "0x1B9d5a626fEf3183cDDb456e5DA8F34A7C428145",
-      "goerli": "0x16db941B5C258F5D28fe93E058bcc64F6028b1e4",
-      "mumbai": "0x26e8BAb22a311Ce7b55DFa7da8af0FE4443A2c4d"
-    },
     "sbt": {
       "ethereum": "",
       "goerli": "0x5D99889e800BD18De7377e614fbB2362D9cECA2F"
     }
-  },
-  "explorer": {
-    "ethereum": "https://etherscan.io",
-    "goerli": "https://goerli.etherscan.io",
-    "mumbai": "https://mumbai.polygonscan.com/",
-    "polygon": "https://polygonscan.com/"
   }
 }
